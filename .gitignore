@@ -1,0 +1,9 @@
+# Dependencias
+**/node_modules/
+
+# Archivos de compilación
+**/dist/
+**/.angular/
+
+# Variables de entorno (credenciales)
+**/.env
