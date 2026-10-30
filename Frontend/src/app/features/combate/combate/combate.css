@@ -1,0 +1,16 @@
+.buscador-seccion {
+  margin-bottom: 2rem;
+}
+
+.mesa-combate h3 {
+  border-bottom: 1px solid #2a2a35;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #e2e2e8;
+}
+
+.grilla-combatientes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}

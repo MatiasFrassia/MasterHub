@@ -1,0 +1,31 @@
+<div 
+  class="tarjeta-basica"
+  cdkOverlayOrigin 
+  #trigger="cdkOverlayOrigin"
+  (mouseenter)="isHovered = true"
+  (mouseleave)="isHovered = false"
+>
+  <img [src]="criatura.url_imagen || 'assets/placeholder.webp'" [alt]="criatura.nombre" class="retrato" />
+  <div class="datos">
+    <h4 class="nombre">{{ criatura.nombre }}</h4>
+    <div class="stats">
+      <span class="stat">🛡️ CA: <strong>{{ criatura.clase_armadura }}</strong></span>
+      <span class="stat">❤️ HP: <strong>{{ criatura.puntos_golpe }}</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay emergente con la ficha completa -->
+<ng-template 
+  cdkConnectedOverlay 
+  [cdkConnectedOverlayOrigin]="trigger" 
+  [cdkConnectedOverlayOpen]="isHovered"
+  [cdkConnectedOverlayPositions]="[
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 10 },
+    { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top', offsetX: -10 }
+  ]"
+>
+  <div (mouseenter)="isHovered = true" (mouseleave)="isHovered = false">
+    <app-tarjeta-completa [criaturaId]="criatura.id"></app-tarjeta-completa>
+  </div>
+</ng-template>

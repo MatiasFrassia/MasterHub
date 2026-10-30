@@ -1,0 +1,110 @@
+<div class="tarjeta-completa-container">
+  <div *ngIf="cargando" class="estado-cargando">
+    <span class="spinner"></span>
+    <p>Cargando ficha...</p>
+  </div>
+
+  <div *ngIf="error" class="estado-error">
+    <p>❌ No se pudo cargar la información de la criatura.</p>
+  </div>
+
+  <div *ngIf="!cargando && !error && criatura" class="statblock">
+    <!-- Encabezado -->
+    <header class="statblock-header">
+      <h2 class="nombre">{{ criatura.nombre }}</h2>
+      <p class="subtitulo">{{ criatura.tamano }} {{ criatura.tipo }}, {{ criatura.alineamiento }}</p>
+    </header>
+
+    <div class="red-line"></div>
+
+    <!-- Atributos básicos -->
+    <section class="propiedades-basicas">
+      <div><strong>Clase de Armadura:</strong> {{ criatura.clase_armadura }} <span *ngIf="criatura.detalle_armadura">({{ criatura.detalle_armadura }})</span></div>
+      <div><strong>Puntos de Golpe:</strong> {{ criatura.puntos_golpe }} ({{ criatura.dado_golpe }})</div>
+      <div><strong>Velocidad:</strong> {{ formatearObjetoJson(criatura.velocidad) }}</div>
+    </section>
+
+    <div class="red-line"></div>
+
+    <!-- Puntuaciones de Característica -->
+    <section class="atributos-grid">
+      <div class="atributo">
+        <span class="label">FUE</span>
+        <span class="val">{{ criatura.fuerza }} ({{ getModificadores(criatura.fuerza) }})</span>
+      </div>
+      <div class="atributo">
+        <span class="label">DES</span>
+        <span class="val">{{ criatura.destreza }} ({{ getModificadores(criatura.destreza) }})</span>
+      </div>
+      <div class="atributo">
+        <span class="label">CON</span>
+        <span class="val">{{ criatura.constitucion }} ({{ getModificadores(criatura.constitucion) }})</span>
+      </div>
+      <div class="atributo">
+        <span class="label">INT</span>
+        <span class="val">{{ criatura.inteligencia }} ({{ getModificadores(criatura.inteligencia) }})</span>
+      </div>
+      <div class="atributo">
+        <span class="label">SAB</span>
+        <span class="val">{{ criatura.sabiduria }} ({{ getModificadores(criatura.sabiduria) }})</span>
+      </div>
+      <div class="atributo">
+        <span class="label">CAR</span>
+        <span class="val">{{ criatura.carisma }} ({{ getModificadores(criatura.carisma) }})</span>
+      </div>
+    </section>
+
+    <div class="red-line"></div>
+
+    <!-- Tiradas, Habilidades y Lenguajes -->
+    <section class="detalles-secundarios">
+      <div *ngIf="criatura.tiradas_salvacion"><strong>Tiradas de salvación:</strong> {{ formatearObjetoJson(criatura.tiradas_salvacion) }}</div>
+      <div *ngIf="criatura.habilidades"><strong>Habilidades:</strong> {{ formatearObjetoJson(criatura.habilidades) }}</div>
+      <div *ngIf="criatura.sentidos"><strong>Sentidos:</strong> {{ criatura.sentidos }}</div>
+      <div *ngIf="criatura.idiomas"><strong>Idiomas:</strong> {{ criatura.idiomas }}</div>
+      <div><strong>Desafío:</strong> {{ criatura.desafio }} ({{ criatura.puntos_experiencia | number }} PX)</div>
+    </section>
+
+    <!-- Conjuros (Si posee) -->
+    <section *ngIf="criatura.conjuros && criatura.conjuros.length > 0" class="seccion-conjuros">
+      <div class="red-line"></div>
+      <h3 class="titulo-seccion">✨ Conjuros</h3>
+      <div class="conjuros-list">
+        <span 
+          *ngFor="let c of criatura.conjuros" 
+          class="badge-conjuro"
+          cdkOverlayOrigin
+          #conjuroTrigger="cdkOverlayOrigin"
+          (mouseenter)="conjuroActivo = c"
+          (mouseleave)="conjuroActivo = null"
+        >
+          {{ c.nombre }} <small *ngIf="c.modalidad">({{ c.modalidad }})</small>
+
+          <!-- Overlay del Conjuro Flotante -->
+          <ng-template
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="conjuroTrigger"
+            [cdkConnectedOverlayOpen]="conjuroActivo?.id === c.id"
+            [cdkConnectedOverlayPositions]="[
+              { originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center', offsetX: 12 },
+              { originX: 'start', originY: 'center', overlayX: 'end', overlayY: 'center', offsetX: -12 }
+            ]"
+          >
+            <app-tarjeta-conjuro [conjuro]="c"></app-tarjeta-conjuro>
+          </ng-template>
+        </span>
+      </div>
+    </section>
+
+    <!-- Rasgos y Acciones -->
+    <section *ngIf="criatura.acciones && criatura.acciones.length > 0" class="seccion-acciones">
+      <div class="red-line"></div>
+      <div *ngFor="let accion of criatura.acciones" class="item-accion">
+        <p>
+          <strong class="nombre-accion">{{ accion.nombre }} <span *ngIf="accion.uso_limitado">({{ accion.uso_limitado }})</span>.</strong>
+          {{ accion.descripcion }}
+        </p>
+      </div>
+    </section>
+  </div>
+</div>

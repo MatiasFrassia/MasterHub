@@ -1,0 +1,17 @@
+<div class="tarjeta-conjuro-card">
+  <header>
+    <h4 class="nombre">{{ conjuro.nombre }}</h4>
+    <p class="nivel-escuela">
+      {{ conjuro.nivel === 0 ? 'Truco' : 'Nivel ' + conjuro.nivel }} {{ conjuro.escuela ? '• ' + conjuro.escuela : '' }}
+    </p>
+  </header>
+  <div class="separador"></div>
+  <div class="detalles">
+    <p><strong>Tiempo de lanzamiento:</strong> {{ conjuro.tiempo_casteo || '1 acción' }}</p>
+    <p><strong>Alcance:</strong> {{ conjuro.alcance || 'Personal' }}</p>
+    <p><strong>Componentes:</strong> {{ conjuro.componentes || 'V, S' }}</p>
+    <p><strong>Duración:</strong> {{ conjuro.duracion || 'Instantáneo' }}</p>
+  </div>
+  <div class="separador"></div>
+  <p class="descripcion">{{ conjuro.descripcion }}</p>
+</div>

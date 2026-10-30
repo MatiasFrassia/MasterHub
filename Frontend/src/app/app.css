@@ -1,0 +1,45 @@
+.masterhub-layout {
+  min-height: 100vh;
+  background-color: #121216;
+  color: #e0e0e0;
+  padding: 1.5rem 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #2e2e38;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  font-size: 1.6rem;
+  color: #f0c040;
+  margin: 0;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-item {
+  color: #a0a0b0;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: #ffffff;
+  background-color: #242430;
+}
+
+.contenido-principal {
+  width: 100%;
+}

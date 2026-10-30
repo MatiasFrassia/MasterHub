@@ -1,0 +1,24 @@
+<div class="buscador-container">
+  <div class="input-wrapper">
+    <input 
+      type="text" 
+      [(ngModel)]="query" 
+      (input)="onInput()"
+      (focus)="mostrarResultados = true"
+      (blur)="ocultarResultadosConDelay()"
+      placeholder="Buscar criatura o NPC por nombre..."
+      class="input-busqueda"
+    />
+    <span *ngIf="cargando" class="spinner"></span>
+  </div>
+
+  <ul *ngIf="mostrarResultados && resultados.length > 0" class="lista-resultados">
+    <li *ngFor="let item of resultados" (click)="seleccionar(item)" class="item-resultado">
+      <img [src]="item.url_imagen || 'assets/placeholder.webp'" [alt]="item.nombre" class="thumb" />
+      <div class="info">
+        <span class="nombre">{{ item.nombre }}</span>
+        <span class="detalles">CR {{ item.desafio }} | CA {{ item.clase_armadura }} | HP {{ item.puntos_golpe }}</span>
+      </div>
+    </li>
+  </ul>
+</div>

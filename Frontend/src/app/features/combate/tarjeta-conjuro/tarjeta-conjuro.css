@@ -1,0 +1,41 @@
+.tarjeta-conjuro-card {
+  width: 280px;
+  background-color: #14101d;
+  border: 1px solid #7a4bb0;
+  border-radius: 8px;
+  padding: 12px;
+  color: #e2d9f3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.nombre {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #b98bf0;
+}
+
+.nivel-escuela {
+  margin: 2px 0 6px 0;
+  font-style: italic;
+  color: #8f85a3;
+  font-size: 0.75rem;
+}
+
+.separador {
+  height: 1px;
+  background-color: #3b2a54;
+  margin: 6px 0;
+}
+
+.detalles p {
+  margin: 2px 0;
+  color: #bbb0d6;
+}
+
+.descripcion {
+  margin-top: 6px;
+  color: #eae3f7;
+  white-space: pre-line;
+}

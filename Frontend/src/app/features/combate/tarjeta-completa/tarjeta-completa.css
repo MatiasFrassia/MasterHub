@@ -1,0 +1,123 @@
+.tarjeta-completa-container {
+  width: 440px;               /* Ampliado de 380px a 440px */
+  max-height: 80vh;            /* Se adapta a la altura de la pantalla */
+  overflow-y: auto;
+  background-color: #1e1e24;
+  border: 2px solid #8c2323;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  color: #e2e2e8;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.estado-cargando, .estado-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #bbb;
+}
+
+.statblock-header .nombre {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #e69a28;
+  font-family: 'Cinzel', serif, Georgia;
+  text-transform: uppercase;
+}
+
+.statblock-header .subtitulo {
+  margin: 2px 0 6px 0;
+  font-style: italic;
+  color: #a0a0b0;
+  font-size: 0.8rem;
+}
+
+.red-line {
+  height: 2px;
+  background: linear-gradient(90deg, #8c2323 0%, #d44242 50%, #8c2323 100%);
+  margin: 8px 0;
+}
+
+.propiedades-basicas div,
+.detalles-secundarios div {
+  margin-bottom: 3px;
+  color: #d1d1db;
+}
+
+.atributos-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  text-align: center;
+  padding: 4px 0;
+}
+
+.atributo {
+  display: flex;
+  flex-direction: column;
+  background-color: #15151a;
+  padding: 4px 2px;
+  border-radius: 4px;
+  border: 1px solid #2e2e3a;
+}
+
+.atributo .label {
+  font-weight: bold;
+  color: #e69a28;
+  font-size: 0.75rem;
+}
+
+.atributo .val {
+  font-size: 0.78rem;
+}
+
+.titulo-seccion {
+  margin: 6px 0;
+  font-size: 0.95rem;
+  color: #e69a28;
+}
+
+.conjuros-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.badge-conjuro {
+  background-color: #2a2038;
+  border: 1px solid #6b468e;
+  color: #d8b4f8;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.badge-conjuro:hover {
+  background-color: #432e5b;
+  border-color: #a879e6;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(168, 121, 230, 0.4);
+}
+
+.item-accion {
+  margin-bottom: 10px;
+}
+
+.item-accion p {
+  margin: 0;
+  white-space: normal;         /* Permite el salto de línea natural */
+  word-wrap: break-word;
+}
+
+.nombre-accion {
+  color: #f1f1f1;
+  font-style: italic;
+}
