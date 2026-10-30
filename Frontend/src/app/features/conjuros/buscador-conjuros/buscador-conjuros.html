@@ -1,0 +1,79 @@
+<div class="buscador-conjuros-container">
+  <h2 class="titulo-seccion">BUSCAR CONJUROS</h2>
+  
+  <div class="filtros-grid">
+    <input type="text" class="input-dark" placeholder="Buscar por nombre" [(ngModel)]="filtros.nombre" (keyup.enter)="buscar()">
+    
+    <select class="select-dark" [(ngModel)]="filtros.nivel">
+      <option value="">- Nivel -</option>
+      <option *ngFor="let nv of niveles" [value]="nv">Nivel {{ nv === 0 ? '0 (Truco)' : nv }}</option>
+    </select>
+    
+    <select class="select-dark" [(ngModel)]="filtros.escuela">
+      <option value="">- Escuela -</option>
+      <option *ngFor="let esc of escuelas" [value]="esc">{{ esc }}</option>
+    </select>
+    
+    <select class="select-dark" [(ngModel)]="filtros.clase">
+      <option value="">- Clase -</option>
+      <!-- Se llenará en el próximo paso -->
+    </select>
+    
+    <select class="select-dark" [(ngModel)]="filtros.orden">
+      <option value="nombre">Ordenar por nombre</option>
+      <option value="nivel">Ordenar por nivel</option>
+    </select>
+    
+    <button class="btn-buscar" (click)="buscar()">Buscar</button>
+  </div>
+
+  <div class="lista-conjuros">
+    <!-- Encabezados de columna -->
+    <div class="conjuro-row conjuro-header">
+      <div class="col-nombre">Nombre</div>
+      <div class="col-nivel">Nivel</div>
+      <div class="col-escuela">Escuela</div>
+      <div class="col-tiempo">Tiempo</div>
+      <div class="col-duracion">Duración</div>
+      <div class="col-alcance">Alcance</div>
+      <div class="col-comp">Comp.</div>
+    </div>
+
+    <!-- Filas de datos (Ahora el hover está en toda la fila) -->
+    <div class="conjuro-row data-row" *ngFor="let conjuro of conjurosFiltrados"
+         cdkOverlayOrigin
+         #conjuroTrigger="cdkOverlayOrigin"
+         (click)="toggleTarjeta(conjuro)"
+         [class.fila-seleccionada]="conjuroActivo?.id === conjuro.id">
+      
+      <div class="col-nombre">
+        <span class="icono-llave">🗝️</span>
+        <strong>{{ conjuro.nombre }}</strong>
+      </div>
+      
+      <div class="col-nivel">Nv. {{ conjuro.nivel }}</div>
+      <div class="col-escuela">{{ conjuro.escuela }}</div>
+      <div class="col-tiempo">{{ conjuro.tiempo_casteo }}</div>
+      <div class="col-duracion">{{ conjuro.duracion }}</div>
+      <div class="col-alcance">{{ conjuro.alcance }}</div>
+      <div class="col-comp" [title]="conjuro.componentes">{{ conjuro.componentes }}</div>
+
+      <!-- Tarjeta Flotante (Overlay) priorizando abrirse hacia ABAJO -->
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="conjuroTrigger"
+        [cdkConnectedOverlayOpen]="conjuroActivo?.id === conjuro.id"
+        [cdkConnectedOverlayPositions]="[
+          { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 6 },
+          { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -6 }
+        ]"
+      >
+        <app-tarjeta-conjuro [conjuro]="conjuro"></app-tarjeta-conjuro>
+      </ng-template>
+    </div>
+    
+    <div *ngIf="conjurosFiltrados.length === 0" class="sin-resultados">
+      No se encontraron conjuros que coincidan con la búsqueda.
+    </div>
+  </div>
+</div>

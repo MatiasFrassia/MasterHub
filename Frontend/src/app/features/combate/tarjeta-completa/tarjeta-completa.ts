@@ -2,14 +2,20 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CriaturaService } from '../../../core/services/criatura';
-import { CriaturaCompleta } from '../../../core/models/criatura';
+import { CriaturaCompleta, Accion } from '../../../core/models/criatura';
 import { Conjuro } from '../../../core/models/conjuro';
 import { TarjetaConjuroComponent } from '../tarjeta-conjuro/tarjeta-conjuro';
+import { TextoConEstadosComponent } from '../../../shared/components/texto-con-estados/texto-con-estados';
 
 @Component({
   selector: 'app-tarjeta-completa',
   standalone: true,
-  imports: [CommonModule, OverlayModule, TarjetaConjuroComponent],
+  imports: [
+    CommonModule, 
+    OverlayModule, 
+    TarjetaConjuroComponent, 
+    TextoConEstadosComponent
+  ],
   templateUrl: './tarjeta-completa.html',
   styleUrl: './tarjeta-completa.css'
 })
@@ -22,7 +28,6 @@ export class TarjetaCompletaComponent implements OnInit {
   cargando = true;
   error = false;
 
-  // Estado para el hover de conjuros
   conjuroActivo: Conjuro | null = null;
 
   ngOnInit(): void {
@@ -42,6 +47,26 @@ export class TarjetaCompletaComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  get rasgos(): Accion[] {
+    return this.criatura?.acciones?.filter(a => a.tipo === 'rasgo') || [];
+  }
+
+  get acciones(): Accion[] {
+    return this.criatura?.acciones?.filter(a => a.tipo === 'accion') || [];
+  }
+
+  get accionesBonificadas(): Accion[] {
+    return this.criatura?.acciones?.filter(a => a.tipo === 'accion_bonificada') || [];
+  }
+
+  get reacciones(): Accion[] {
+    return this.criatura?.acciones?.filter(a => a.tipo === 'reaccion') || [];
+  }
+
+  get accionesLegendarias(): Accion[] {
+    return this.criatura?.acciones?.filter(a => a.tipo === 'accion_legendaria') || [];
   }
 
   getModificadores(valor: number): string {

@@ -1,0 +1,155 @@
+.buscador-conjuros-container {
+  padding: 20px;
+  color: #e2e2e8;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.titulo-seccion {
+  font-size: 1.2rem;
+  color: #e2e2e8;
+  margin-bottom: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 1px;
+}
+
+.filtros-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.input-dark, .select-dark {
+  background-color: #17131d;
+  border: 1px solid #333;
+  color: #a0a0a0;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  flex: 1;
+  min-width: 150px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-dark:focus, .select-dark:focus {
+  border-color: #b33939;
+  color: #fff;
+}
+
+.btn-buscar {
+  background-color: #a6583c;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+  min-width: 120px;
+}
+
+.btn-buscar:hover {
+  background-color: #c76b4a;
+}
+
+/* Tabla simulada con Flexbox */
+.lista-conjuros {
+  background-color: #17131d;
+  border: 1px solid #2a2a35;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.conjuro-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #2a2a35;
+  font-size: 0.9rem;
+}
+
+.conjuro-row:last-child {
+  border-bottom: none;
+}
+
+.conjuro-header {
+  background-color: #1e1e24;
+  font-weight: bold;
+  color: #888;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Obliga a TODOS los textos dentro de las celdas a ocupar 1 solo renglón */
+.conjuro-row > div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0; /* CRUCIAL para que el truncamiento funcione en Flexbox */
+}
+
+/* Animación sutil para el renglón interactivo */
+.data-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-left 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.data-row:hover {
+  background-color: #211c29;
+  border-left: 3px solid #b33939;
+}
+
+.data-row:hover .col-nombre strong {
+  color: #fca5a5;
+}
+
+/* Columnas Flex */
+.col-nombre { flex: 2; display: flex; align-items: center; gap: 10px; color: #fff; }
+.col-nivel { flex: 0.5; color: #aaa; }
+.col-escuela { flex: 1; color: #aaa; }
+.col-tiempo { flex: 1; color: #aaa; }
+.col-duracion { flex: 1.5; color: #aaa; }
+.col-alcance { flex: 1; color: #aaa; }
+.col-comp { flex: 0.5; color: #aaa; }
+
+.icono-llave {
+  font-size: 1.2rem;
+}
+
+.sin-resultados {
+  padding: 20px;
+  text-align: center;
+  color: #888;
+}
+
+/* Animación de salida para la tarjeta */
+.animacion-desvanecer {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  0% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0.95); /* Se encoge un 5% al desaparecer */
+  }
+}
+
+/* Fila seleccionada por clic */
+.fila-seleccionada {
+  background-color: #261f30 !important;
+  border-left: 3px solid #b33939 !important;
+}
+
+.fila-seleccionada .col-nombre strong {
+  color: #fca5a5;
+}

@@ -1,0 +1,26 @@
+<ng-container *ngFor="let t of tokens; let i = index">
+  <span *ngIf="!t.esEstado">{{ t.texto }}</span>
+
+  <span
+    *ngIf="t.esEstado && t.estadoInfo"
+    class="palabra-estado"
+    cdkOverlayOrigin
+    #estadoTrigger="cdkOverlayOrigin"
+    (mouseenter)="estadoActivo = t.estadoInfo; tokenActivoIndex = i"
+    (mouseleave)="estadoActivo = null; tokenActivoIndex = null"
+  >
+    {{ t.texto }}
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="estadoTrigger"
+      [cdkConnectedOverlayOpen]="tokenActivoIndex === i"
+      [cdkConnectedOverlayPositions]="[
+        { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -6 },
+        { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 6 }
+      ]"
+    >
+      <app-tarjeta-estado [estado]="t.estadoInfo"></app-tarjeta-estado>
+    </ng-template>
+  </span>
+</ng-container>

@@ -35,6 +35,10 @@ export interface CriaturaCompleta extends CriaturaResumen {
   carisma: number;
   tiradas_salvacion?: Record<string, string> | string;
   habilidades?: Record<string, string> | string;
+  vulnerabilidades?: string;
+  resistencias?: string;
+  inmunidades_dano?: string;
+  inmunidades_estado?: string;
   sentidos?: string;
   idiomas?: string;
   puntos_experiencia: number;

@@ -1,0 +1,36 @@
+.tarjeta-estado-card {
+  width: 290px;
+  background-color: #17131d;
+  border: 1px solid #b33939;
+  border-radius: 8px;
+  padding: 12px;
+  color: #e2e2e8;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  font-family: Georgia, serif;
+}
+
+.tarjeta-estado-card .nombre {
+  margin: 0;
+  font-size: 0.98rem;
+  color: #ff6b6b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tarjeta-estado-card .separador {
+  height: 1px;
+  background: linear-gradient(90deg, #8c2323 0%, #d44242 50%, #8c2323 100%);
+  margin: 6px 0 8px 0;
+}
+
+.tarjeta-estado-card ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.tarjeta-estado-card li {
+  margin-bottom: 5px;
+  color: #d1cbdc;
+}

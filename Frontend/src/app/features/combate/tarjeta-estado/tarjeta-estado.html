@@ -1,0 +1,9 @@
+<div class="tarjeta-estado-card">
+  <header>
+    <h4 class="nombre">📌 Estado: {{ estado.nombre }}</h4>
+  </header>
+  <div class="separador"></div>
+  <ul>
+    <li *ngFor="let punto of estado.descripcion">{{ punto }}</li>
+  </ul>
+</div>

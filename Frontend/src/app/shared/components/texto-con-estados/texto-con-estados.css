@@ -1,0 +1,16 @@
+.palabra-estado {
+  color: #f87171;
+  font-weight: 600;
+  text-decoration: underline dotted #ef4444;
+  cursor: help;
+  transition: all 0.2s ease;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+.palabra-estado:hover {
+  color: #ffffff;
+  background-color: #991b1b;
+  text-decoration: underline solid #fca5a5;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
