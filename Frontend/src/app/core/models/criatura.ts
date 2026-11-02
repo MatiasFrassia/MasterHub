@@ -9,7 +9,6 @@ export interface Accion {
   uso_limitado?: string;
 }
 
-// Modelo ligero para el buscador y las tarjetas del panel de combate
 export interface CriaturaResumen {
   id: number;
   nombre: string;
@@ -19,7 +18,6 @@ export interface CriaturaResumen {
   url_imagen: string;
 }
 
-// Modelo completo para la tarjeta emergente (hover)
 export interface CriaturaCompleta extends CriaturaResumen {
   tamano: string;
   tipo: string;
@@ -44,4 +42,7 @@ export interface CriaturaCompleta extends CriaturaResumen {
   puntos_experiencia: number;
   acciones?: Accion[];
   conjuros?: Conjuro[];
+  // Nuevos campos:
+  historia?: string;
+  imagenes_galeria?: string[];
 }

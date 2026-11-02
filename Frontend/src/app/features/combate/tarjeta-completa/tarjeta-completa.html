@@ -9,160 +9,133 @@
   </div>
 
   <div *ngIf="!cargando && !error && criatura" class="statblock">
-    <!-- Encabezado -->
+    <!-- Encabezado con navegación de pestañas (Flechas superiores) -->
     <header class="statblock-header">
       <h2 class="nombre">{{ criatura.nombre }}</h2>
       <p class="subtitulo">{{ criatura.tamano }} {{ criatura.tipo }}, {{ criatura.alineamiento }}</p>
+      
+      <!-- Flechas de navegación (solo se muestran si hay más de 1 pestaña disponible) -->
+      <div class="nav-pestanas" *ngIf="tabsDisponibles.length > 1">
+        <button class="nav-btn" (click)="anteriorTab()">❮</button>
+        <span class="nav-label">{{ nombreTabActual }}</span>
+        <button class="nav-btn" (click)="siguienteTab()">❯</button>
+      </div>
     </header>
 
     <div class="red-line"></div>
 
-    <!-- Atributos básicos -->
-    <section class="propiedades-basicas">
-      <div><strong>Clase de Armadura:</strong> {{ criatura.clase_armadura }} <span *ngIf="criatura.detalle_armadura">({{ criatura.detalle_armadura }})</span></div>
-      <div><strong>Puntos de Golpe:</strong> {{ criatura.puntos_golpe }} ({{ criatura.dado_golpe }})</div>
-      <div><strong>Velocidad:</strong> {{ formatearObjetoJson(criatura.velocidad) }}</div>
-    </section>
+    <div [ngSwitch]="tabActual">
+      
+      <!-- ================= PESTAÑA 1: STATS ================= -->
+      <div *ngSwitchCase="'stats'" class="tab-content">
+        <section class="propiedades-basicas">
+          <div><strong>Clase de Armadura:</strong> {{ criatura.clase_armadura }} <span *ngIf="criatura.detalle_armadura">({{ criatura.detalle_armadura }})</span></div>
+          <div><strong>Puntos de Golpe:</strong> {{ criatura.puntos_golpe }} ({{ criatura.dado_golpe }})</div>
+          <div><strong>Velocidad:</strong> {{ formatearObjetoJson(criatura.velocidad) }}</div>
+        </section>
+        <div class="red-line"></div>
 
-    <div class="red-line"></div>
+        <section class="atributos-grid">
+          <div class="atributo"><span class="label">FUE</span><span class="val">{{ criatura.fuerza }} ({{ getModificadores(criatura.fuerza) }})</span></div>
+          <div class="atributo"><span class="label">DES</span><span class="val">{{ criatura.destreza }} ({{ getModificadores(criatura.destreza) }})</span></div>
+          <div class="atributo"><span class="label">CON</span><span class="val">{{ criatura.constitucion }} ({{ getModificadores(criatura.constitucion) }})</span></div>
+          <div class="atributo"><span class="label">INT</span><span class="val">{{ criatura.inteligencia }} ({{ getModificadores(criatura.inteligencia) }})</span></div>
+          <div class="atributo"><span class="label">SAB</span><span class="val">{{ criatura.sabiduria }} ({{ getModificadores(criatura.sabiduria) }})</span></div>
+          <div class="atributo"><span class="label">CAR</span><span class="val">{{ criatura.carisma }} ({{ getModificadores(criatura.carisma) }})</span></div>
+        </section>
+        <div class="red-line"></div>
 
-    <!-- Puntuaciones de Característica -->
-    <section class="atributos-grid">
-      <div class="atributo">
-        <span class="label">FUE</span>
-        <span class="val">{{ criatura.fuerza }} ({{ getModificadores(criatura.fuerza) }})</span>
-      </div>
-      <div class="atributo">
-        <span class="label">DES</span>
-        <span class="val">{{ criatura.destreza }} ({{ getModificadores(criatura.destreza) }})</span>
-      </div>
-      <div class="atributo">
-        <span class="label">CON</span>
-        <span class="val">{{ criatura.constitucion }} ({{ getModificadores(criatura.constitucion) }})</span>
-      </div>
-      <div class="atributo">
-        <span class="label">INT</span>
-        <span class="val">{{ criatura.inteligencia }} ({{ getModificadores(criatura.inteligencia) }})</span>
-      </div>
-      <div class="atributo">
-        <span class="label">SAB</span>
-        <span class="val">{{ criatura.sabiduria }} ({{ getModificadores(criatura.sabiduria) }})</span>
-      </div>
-      <div class="atributo">
-        <span class="label">CAR</span>
-        <span class="val">{{ criatura.carisma }} ({{ getModificadores(criatura.carisma) }})</span>
-      </div>
-    </section>
+        <section class="detalles-secundarios">
+          <div *ngIf="criatura.tiradas_salvacion"><strong>Tiradas de salvación:</strong> {{ formatearObjetoJson(criatura.tiradas_salvacion) }}</div>
+          <div *ngIf="criatura.vulnerabilidades"><strong>Vulnerabilidad a daño:</strong> {{ criatura.vulnerabilidades }}</div>
+          <div *ngIf="criatura.resistencias"><strong>Resistencia a daño:</strong> {{ criatura.resistencias }}</div>
+          <div *ngIf="criatura.inmunidades_dano"><strong>Inmunidad a daño:</strong> {{ criatura.inmunidades_dano }}</div>
+          <div *ngIf="criatura.inmunidades_estado"><strong>Inmunidad a estados:</strong> <app-texto-con-estados [texto]="criatura.inmunidades_estado"></app-texto-con-estados></div>
+          <div *ngIf="criatura.habilidades"><strong>Habilidades:</strong> {{ formatearObjetoJson(criatura.habilidades) }}</div>
+          <div *ngIf="criatura.sentidos"><strong>Sentidos:</strong> {{ criatura.sentidos }}</div>
+          <div *ngIf="criatura.idiomas"><strong>Idiomas:</strong> {{ criatura.idiomas }}</div>
+          <div><strong>Desafío:</strong> {{ criatura.desafio }} ({{ criatura.puntos_experiencia | number }} PX)</div>
+        </section>
 
-    <div class="red-line"></div>
+        <section *ngIf="rasgos.length > 0" class="seccion-bloque">
+          <div class="red-line"></div>
+          <div *ngFor="let rasgo of rasgos" class="item-accion">
+            <p><strong class="nombre-accion">{{ rasgo.nombre }} <span *ngIf="rasgo.uso_limitado">({{ rasgo.uso_limitado }})</span>.</strong> <app-texto-con-estados [texto]="rasgo.descripcion"></app-texto-con-estados></p>
+          </div>
+        </section>
 
-    <!-- Tiradas, Defensas, Habilidades y Lenguajes -->
-    <section class="detalles-secundarios">
-      <div *ngIf="criatura.tiradas_salvacion"><strong>Tiradas de salvación:</strong> {{ formatearObjetoJson(criatura.tiradas_salvacion) }}</div>
-      <div *ngIf="criatura.vulnerabilidades"><strong>Vulnerabilidad a daño:</strong> {{ criatura.vulnerabilidades }}</div>
-      <div *ngIf="criatura.resistencias"><strong>Resistencia a daño:</strong> {{ criatura.resistencias }}</div>
-      <div *ngIf="criatura.inmunidades_dano"><strong>Inmunidad a daño:</strong> {{ criatura.inmunidades_dano }}</div>
-      <div *ngIf="criatura.inmunidades_estado">
-        <strong>Inmunidad a estados:</strong> 
-        <app-texto-con-estados [texto]="criatura.inmunidades_estado"></app-texto-con-estados>
+        <section *ngIf="criatura.conjuros && criatura.conjuros.length > 0" class="seccion-conjuros">
+          <div class="red-line"></div>
+          <h3 class="titulo-seccion-dnd">✨ CONJUROS</h3>
+          <div class="conjuros-list">
+            <span *ngFor="let c of criatura.conjuros" class="badge-conjuro" cdkOverlayOrigin #conjuroTrigger="cdkOverlayOrigin" (mouseenter)="conjuroActivo = c" (mouseleave)="conjuroActivo = null">
+              {{ c.nombre }} <small *ngIf="c.modalidad">({{ c.modalidad }})</small>
+              <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="conjuroTrigger" [cdkConnectedOverlayOpen]="conjuroActivo?.id === c.id">
+                <app-tarjeta-conjuro [conjuro]="c"></app-tarjeta-conjuro>
+              </ng-template>
+            </span>
+          </div>
+        </section>
+
+        <section *ngIf="acciones.length > 0" class="seccion-bloque">
+          <div class="red-line"></div>
+          <h3 class="titulo-seccion-dnd">ACCIONES</h3>
+          <div *ngFor="let accion of acciones" class="item-accion">
+            <p><strong class="nombre-accion">{{ accion.nombre }} <span *ngIf="accion.uso_limitado">({{ accion.uso_limitado }})</span>.</strong> <app-texto-con-estados [texto]="accion.descripcion"></app-texto-con-estados></p>
+          </div>
+        </section>
+
+        <section *ngIf="accionesBonificadas.length > 0" class="seccion-bloque">
+          <div class="red-line"></div>
+          <h3 class="titulo-seccion-dnd">ACCIONES BONIFICADAS</h3>
+          <div *ngFor="let acc of accionesBonificadas" class="item-accion">
+            <p><strong class="nombre-accion">{{ acc.nombre }} <span *ngIf="acc.uso_limitado">({{ acc.uso_limitado }})</span>.</strong> <app-texto-con-estados [texto]="acc.descripcion"></app-texto-con-estados></p>
+          </div>
+        </section>
+
+        <section *ngIf="reacciones.length > 0" class="seccion-bloque">
+          <div class="red-line"></div>
+          <h3 class="titulo-seccion-dnd">REACCIONES</h3>
+          <div *ngFor="let reaccion of reacciones" class="item-accion">
+            <p><strong class="nombre-accion">{{ reaccion.nombre }} <span *ngIf="reaccion.uso_limitado">({{ reaccion.uso_limitado }})</span>.</strong> <app-texto-con-estados [texto]="reaccion.descripcion"></app-texto-con-estados></p>
+          </div>
+        </section>
+
+        <section *ngIf="accionesLegendarias.length > 0" class="seccion-bloque">
+          <div class="red-line"></div>
+          <h3 class="titulo-seccion-dnd">ACCIONES LEGENDARIAS</h3>
+          <div *ngFor="let leg of accionesLegendarias" class="item-accion">
+            <p><strong class="nombre-accion">{{ leg.nombre }} <span *ngIf="leg.uso_limitado">({{ leg.uso_limitado }})</span>.</strong> <app-texto-con-estados [texto]="leg.descripcion"></app-texto-con-estados></p>
+          </div>
+        </section>
       </div>
-      <div *ngIf="criatura.habilidades"><strong>Habilidades:</strong> {{ formatearObjetoJson(criatura.habilidades) }}</div>
-      <div *ngIf="criatura.sentidos"><strong>Sentidos:</strong> {{ criatura.sentidos }}</div>
-      <div *ngIf="criatura.idiomas"><strong>Idiomas:</strong> {{ criatura.idiomas }}</div>
-      <div><strong>Desafío:</strong> {{ criatura.desafio }} ({{ criatura.puntos_experiencia | number }} PX)</div>
-    </section>
 
-    <!-- RASGOS Y CUALIDADES (Sin título superior) -->
-    <section *ngIf="rasgos.length > 0" class="seccion-bloque">
-      <div class="red-line"></div>
-      <div *ngFor="let rasgo of rasgos" class="item-accion">
-        <p>
-          <strong class="nombre-accion">{{ rasgo.nombre }} <span *ngIf="rasgo.uso_limitado">({{ rasgo.uso_limitado }})</span>.</strong>
-          <app-texto-con-estados [texto]="rasgo.descripcion"></app-texto-con-estados>
-        </p>
+      <!-- ================= PESTAÑA 2: LORE/DESCRIPCIÓN ================= -->
+      <div *ngSwitchCase="'lore'" class="tab-content lore-content">
+        <p class="historia-texto">{{ criatura.historia }}</p>
       </div>
-    </section>
 
-    <!-- CONJUROS (Si posee) -->
-    <section *ngIf="criatura.conjuros && criatura.conjuros.length > 0" class="seccion-conjuros">
-      <div class="red-line"></div>
-      <h3 class="titulo-seccion-dnd">✨ CONJUROS</h3>
-      <div class="conjuros-list">
-        <span 
-          *ngFor="let c of criatura.conjuros" 
-          class="badge-conjuro"
-          cdkOverlayOrigin
-          #conjuroTrigger="cdkOverlayOrigin"
-          (mouseenter)="conjuroActivo = c"
-          (mouseleave)="conjuroActivo = null"
-        >
-          {{ c.nombre }} <small *ngIf="c.modalidad">({{ c.modalidad }})</small>
+      <!-- ================= PESTAÑA 3: GALERÍA (HERO SLIDER) ================= -->
+      <div *ngSwitchCase="'galeria'" class="tab-content">
+        <div class="galeria-hero">
+          <button class="hero-btn prev" (click)="anteriorFoto()" *ngIf="criatura.imagenes_galeria!.length > 1">❮</button>
+          
+          <img [src]="criatura.imagenes_galeria![fotoActual]" class="hero-img" alt="Imagen de {{ criatura.nombre }}">
+          
+          <button class="hero-btn next" (click)="siguienteFoto()" *ngIf="criatura.imagenes_galeria!.length > 1">❯</button>
 
-          <!-- Overlay del Conjuro Flotante -->
-          <ng-template
-            cdkConnectedOverlay
-            [cdkConnectedOverlayOrigin]="conjuroTrigger"
-            [cdkConnectedOverlayOpen]="conjuroActivo?.id === c.id"
-            [cdkConnectedOverlayPositions]="[
-              { originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center', offsetX: 12 },
-              { originX: 'start', originY: 'center', overlayX: 'end', overlayY: 'center', offsetX: -12 }
-            ]"
-          >
-            <app-tarjeta-conjuro [conjuro]="c"></app-tarjeta-conjuro>
-          </ng-template>
-        </span>
+          <!-- Puntos indicadores -->
+          <div class="hero-indicadores" *ngIf="criatura.imagenes_galeria!.length > 1">
+            <span 
+              *ngFor="let img of criatura.imagenes_galeria; let i = index" 
+              class="punto" 
+              [class.activo]="i === fotoActual"
+              (click)="fotoActual = i">
+            </span>
+          </div>
+        </div>
       </div>
-    </section>
 
-    <!-- ACCIONES -->
-    <section *ngIf="acciones.length > 0" class="seccion-bloque">
-      <div class="red-line"></div>
-      <h3 class="titulo-seccion-dnd">ACCIONES</h3>
-      <div *ngFor="let accion of acciones" class="item-accion">
-        <p>
-          <strong class="nombre-accion">{{ accion.nombre }} <span *ngIf="accion.uso_limitado">({{ accion.uso_limitado }})</span>.</strong>
-          <app-texto-con-estados [texto]="accion.descripcion"></app-texto-con-estados>
-        </p>
-      </div>
-    </section>
-
-    <!-- ACCIONES BONIFICADAS -->
-    <section *ngIf="accionesBonificadas.length > 0" class="seccion-bloque">
-      <div class="red-line"></div>
-      <h3 class="titulo-seccion-dnd">ACCIONES BONIFICADAS</h3>
-      <div *ngFor="let acc of accionesBonificadas" class="item-accion">
-        <p>
-          <strong class="nombre-accion">{{ acc.nombre }} <span *ngIf="acc.uso_limitado">({{ acc.uso_limitado }})</span>.</strong>
-          <app-texto-con-estados [texto]="acc.descripcion"></app-texto-con-estados>
-        </p>
-      </div>
-    </section>
-
-    <!-- REACCIONES -->
-    <section *ngIf="reacciones.length > 0" class="seccion-bloque">
-      <div class="red-line"></div>
-      <h3 class="titulo-seccion-dnd">REACCIONES</h3>
-      <div *ngFor="let reaccion of reacciones" class="item-accion">
-        <p>
-          <strong class="nombre-accion">{{ reaccion.nombre }} <span *ngIf="reaccion.uso_limitado">({{ reaccion.uso_limitado }})</span>.</strong>
-          <app-texto-con-estados [texto]="reaccion.descripcion"></app-texto-con-estados>
-        </p>
-      </div>
-    </section>
-
-    <!-- ACCIONES LEGENDARIAS -->
-    <section *ngIf="accionesLegendarias.length > 0" class="seccion-bloque">
-      <div class="red-line"></div>
-      <h3 class="titulo-seccion-dnd">ACCIONES LEGENDARIAS</h3>
-      <p class="intro-legendaria">
-        El {{ criatura.nombre.toLowerCase() }} puede llevar a cabo 3 acciones legendarias, a elegir de entre las opciones presentadas a continuación. Solo puede utilizar una acción legendaria a la vez, pero solo al final del turno de otra criatura. El {{ criatura.nombre.toLowerCase() }} recupera las acciones legendarias gastadas al comienzo de su turno.
-      </p>
-      <div *ngFor="let leg of accionesLegendarias" class="item-accion">
-        <p>
-          <strong class="nombre-accion">{{ leg.nombre }} <span *ngIf="leg.uso_limitado">({{ leg.uso_limitado }})</span>.</strong>
-          <app-texto-con-estados [texto]="leg.descripcion"></app-texto-con-estados>
-        </p>
-      </div>
-    </section>
+    </div>
   </div>
 </div>

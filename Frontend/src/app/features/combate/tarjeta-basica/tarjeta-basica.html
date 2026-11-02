@@ -2,8 +2,7 @@
   class="tarjeta-basica"
   cdkOverlayOrigin 
   #trigger="cdkOverlayOrigin"
-  (mouseenter)="isHovered = true"
-  (mouseleave)="isHovered = false"
+  (click)="toggleTarjeta($event)"
 >
   <img [src]="criatura.url_imagen || 'assets/placeholder.webp'" [alt]="criatura.nombre" class="retrato" />
   <div class="datos">
@@ -19,13 +18,14 @@
 <ng-template 
   cdkConnectedOverlay 
   [cdkConnectedOverlayOrigin]="trigger" 
-  [cdkConnectedOverlayOpen]="isHovered"
+  [cdkConnectedOverlayOpen]="isOpen"
+  (cdkConnectedOverlayOutsideClick)="onOutsideClick($event)"
   [cdkConnectedOverlayPositions]="[
     { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 10 },
     { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top', offsetX: -10 }
   ]"
 >
-  <div (mouseenter)="isHovered = true" (mouseleave)="isHovered = false">
+  <div class="overlay-wrapper fade-in">
     <app-tarjeta-completa [criaturaId]="criatura.id"></app-tarjeta-completa>
   </div>
 </ng-template>

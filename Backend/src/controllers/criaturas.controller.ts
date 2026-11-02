@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
-
 import { RowDataPacket } from 'mysql2';
 import { db } from '../config/db.js';
 
-// GET /api/criaturas/buscar?q=
 export const buscarCriaturas = async (req: Request, res: Response): Promise<void> => {
     try {
         const termino = (req.query.q as string) || '';
@@ -22,12 +20,10 @@ export const buscarCriaturas = async (req: Request, res: Response): Promise<void
     }
 };
 
-// GET /api/criaturas/:id
 export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
 
-        // 1. Obtener datos base de la criatura
         const [criaturas] = await db.query<RowDataPacket[]>(
             'SELECT * FROM criaturas WHERE id = ?',
             [id]
@@ -38,13 +34,22 @@ export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise
             return;
         }
 
-        // 2. Obtener rasgos y acciones
+        const criatura = criaturas[0];
+
+        // Forzar parseo de la galería si MySQL lo devuelve como string
+        if (typeof criatura.imagenes_galeria === 'string') {
+            try {
+                criatura.imagenes_galeria = JSON.parse(criatura.imagenes_galeria);
+            } catch (e) {
+                criatura.imagenes_galeria = [];
+            }
+        }
+
         const [acciones] = await db.query<RowDataPacket[]>(
             'SELECT id, nombre, descripcion, tipo, uso_limitado FROM rasgos_y_acciones WHERE criatura_id = ?',
             [id]
         );
 
-        // 3. Obtener conjuros vinculados
         const [conjuros] = await db.query<RowDataPacket[]>(
             `SELECT c.*, cc.modalidad 
              FROM conjuros c
@@ -54,7 +59,7 @@ export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise
         );
 
         res.json({
-            ...criaturas[0],
+            ...criatura,
             acciones,
             conjuros
         });

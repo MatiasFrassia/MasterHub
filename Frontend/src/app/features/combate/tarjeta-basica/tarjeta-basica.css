@@ -35,3 +35,31 @@
   font-size: 0.8rem;
   color: #bbb;
 }
+
+.overlay-wrapper {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeInOverlay 0.25s ease-out forwards;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none; /* Impide que el cursor interactúe mientras desaparece */
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
