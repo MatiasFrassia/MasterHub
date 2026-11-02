@@ -35,19 +35,20 @@ export class TarjetaCompletaComponent implements OnInit {
   }
 
   cargarCriatura(): void {
-    this.cargando = true;
-    this.criaturaService.obtenerCriaturaPorId(this.criaturaId).subscribe({
-      next: (data) => {
-        this.criatura = data;
-        this.cargando = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar la criatura:', err);
-        this.error = true;
-        this.cargando = false;
-      }
-    });
-  }
+  this.cargando = true;
+  this.criaturaService.obtenerCriaturaPorId(this.criaturaId).subscribe({
+    next: (data) => {
+      console.log('Datos de la criatura cargada:', data); // 👈 Verifica si data.acciones tiene elementos
+      this.criatura = data;
+      this.cargando = false;
+    },
+    error: (err) => {
+      console.error('Error al cargar la criatura:', err);
+      this.error = true;
+      this.cargando = false;
+    }
+  });
+}
 
   get rasgos(): Accion[] {
     return this.criatura?.acciones?.filter(a => a.tipo === 'rasgo') || [];

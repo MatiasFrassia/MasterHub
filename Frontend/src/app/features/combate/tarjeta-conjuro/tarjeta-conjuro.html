@@ -13,5 +13,8 @@
     <p><strong>Duración:</strong> {{ conjuro.duracion || 'Instantáneo' }}</p>
   </div>
   <div class="separador"></div>
-  <p class="descripcion">{{ conjuro.descripcion }}</p>
+  <div class="descripcion">
+    <!-- Reemplazamos {{ conjuro.descripcion }} por nuestro componente inteligente -->
+    <app-texto-con-estados [texto]="conjuro.descripcion"></app-texto-con-estados>
+  </div>
 </div>
