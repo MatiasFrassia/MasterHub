@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CriaturaService } from '../../../core/services/criatura';
@@ -6,6 +6,7 @@ import { CriaturaCompleta, Accion } from '../../../core/models/criatura';
 import { Conjuro } from '../../../core/models/conjuro';
 import { TarjetaConjuroComponent } from '../tarjeta-conjuro/tarjeta-conjuro';
 import { TextoConEstadosComponent } from '../../../shared/components/texto-con-estados/texto-con-estados';
+
 
 @Component({
   selector: 'app-tarjeta-completa',
@@ -28,6 +29,8 @@ export class TarjetaCompletaComponent implements OnInit {
   cargando = true;
   error = false;
   conjuroActivo: Conjuro | null = null;
+  @ViewChild('fullscreenModal') modalRef?: ElementRef<HTMLDialogElement>;
+  isFullScreen = false;
 
   // Control de pestañas y galería
   tabActualIndex = 0;
@@ -111,5 +114,31 @@ export class TarjetaCompletaComponent implements OnInit {
       return Object.entries(objeto).map(([k, v]) => `${k.toUpperCase()} ${v}`).join(', ');
     }
     return String(objeto);
+  }
+
+  abrirPantallaCompleta(): void {
+    this.isFullScreen = true;
+    // El setTimeout le da tiempo a Angular de renderizar el HTML antes de abrir el modal nativo
+    setTimeout(() => {
+      if (this.modalRef?.nativeElement) {
+        this.modalRef.nativeElement.showModal();
+      }
+    }, 0);
+  }
+
+  cerrarPantallaCompleta(): void {
+    if (this.modalRef?.nativeElement) {
+      this.modalRef.nativeElement.close();
+    }
+    this.isFullScreen = false;
+  }
+
+  navFullScreen(event: Event, direccion: 'prev' | 'next'): void {
+    event.stopPropagation();
+    if (direccion === 'prev') {
+      this.anteriorFoto();
+    } else {
+      this.siguienteFoto();
+    }
   }
 }

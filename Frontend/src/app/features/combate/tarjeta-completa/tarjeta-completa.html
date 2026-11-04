@@ -120,7 +120,7 @@
         <div class="galeria-hero">
           <button class="hero-btn prev" (click)="anteriorFoto()" *ngIf="criatura.imagenes_galeria!.length > 1">❮</button>
           
-          <img [src]="criatura.imagenes_galeria![fotoActual]" class="hero-img" alt="Imagen de {{ criatura.nombre }}">
+          <img [src]="criatura.imagenes_galeria![fotoActual]" class="hero-img clickable" alt="Imagen de {{ criatura.nombre }}" (click)="abrirPantallaCompleta()">
           
           <button class="hero-btn next" (click)="siguienteFoto()" *ngIf="criatura.imagenes_galeria!.length > 1">❯</button>
 
@@ -139,3 +139,17 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL PANTALLA COMPLETA NATIVO -->
+<dialog #fullscreenModal *ngIf="isFullScreen && criatura && criatura.imagenes_galeria" class="fullscreen-dialog" (click)="cerrarPantallaCompleta()">
+  
+  <button class="cerrar-btn" (click)="cerrarPantallaCompleta()">✖</button>
+
+  <button class="hero-btn prev fs-btn" (click)="navFullScreen($event, 'prev')" *ngIf="criatura.imagenes_galeria.length > 1">❮</button>
+  
+  <!-- El (click)="$event.stopPropagation()" evita que se cierre si tocas la foto -->
+  <img [src]="criatura.imagenes_galeria[fotoActual]" class="fullscreen-img" alt="Imagen completa" (click)="$event.stopPropagation()">
+  
+  <button class="hero-btn next fs-btn" (click)="navFullScreen($event, 'next')" *ngIf="criatura.imagenes_galeria.length > 1">❯</button>
+
+</dialog>
