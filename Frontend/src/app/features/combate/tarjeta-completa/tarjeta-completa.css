@@ -1,13 +1,15 @@
+/* ==========================================================================
+   Contenedor Principal de la Tarjeta
+   ========================================================================== */
 .tarjeta-completa-container {
   width: 440px;
-  /* Se calcula la altura máxima restando el espacio que ocupan los elementos superiores */
-  max-height: calc(100vh - 220px); 
+  max-height: calc(100vh - 220px);
   overflow-y: auto;
-  box-sizing: border-box;            /* Garantiza que padding y border no sumen altura extra */
+  box-sizing: border-box;
   background-color: #1e1e24;
   border: 2px solid #8c2323;
   border-radius: 8px;
-  padding: 18px 10px 18px 18px;     /* Espacio interno (reserva 10px a la derecha para el scroll) */
+  padding: 18px 10px 18px 18px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
   color: #e2e2e8;
   font-family: Georgia, 'Times New Roman', serif;
@@ -15,32 +17,38 @@
   line-height: 1.45;
 }
 
-/* Personalización del Scrollbar con temática D&D */
+/* Personalización del Scrollbar */
 .tarjeta-completa-container::-webkit-scrollbar {
   width: 6px;
 }
-
 .tarjeta-completa-container::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 }
-
 .tarjeta-completa-container::-webkit-scrollbar-thumb {
   background: #8c2323;
   border-radius: 4px;
 }
-
 .tarjeta-completa-container::-webkit-scrollbar-thumb:hover {
   background: #b32e2e;
 }
 
-.estado-cargando, .estado-error {
+/* Estados de carga y error */
+.estado-cargando, 
+.estado-error {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   color: #bbb;
+}
+
+/* ==========================================================================
+   Cabecera (Estadísticas Básicas)
+   ========================================================================== */
+.statblock-header {
+  position: relative;
 }
 
 .statblock-header .nombre {
@@ -97,10 +105,126 @@
   font-size: 0.78rem;
 }
 
+.titulo-seccion-dnd,
 .titulo-seccion {
   margin: 6px 0;
   font-size: 0.95rem;
   color: #e69a28;
+}
+
+/* ==========================================================================
+   Acciones y Rasgos
+   ========================================================================== */
+.item-accion {
+  margin-bottom: 10px;
+}
+
+.item-accion p {
+  margin: 0;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.nombre-accion {
+  color: #f1f1f1;
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   Conjuros y Espacios
+   ========================================================================== */
+.seccion-conjuros {
+  margin-top: 10px;
+}
+
+.header-seccion-conjuros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.btn-reiniciar-conjuros {
+  background: #2a1b28;
+  color: #ff9d76;
+  border: 1px solid #b05c3c;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reiniciar-conjuros:hover {
+  background: #b05c3c;
+  color: #fff;
+}
+
+.header-nivel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.subtitulo-nivel {
+  color: #e2e2e8;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.control-espacios {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1a1a24;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  font-size: 0.85rem;
+}
+
+.label-espacios {
+  color: #aaa;
+}
+
+.contador-espacios {
+  font-weight: bold;
+  color: #c988e9;
+  min-width: 35px;
+  text-align: center;
+}
+
+.contador-espacios.agotado {
+  color: #ff5555;
+}
+
+.btn-slot {
+  background: #2e2e3d;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.btn-slot:hover:not(:disabled) {
+  background: #d16e49;
+  border-color: #d16e49;
+}
+
+.btn-slot:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .conjuros-list {
@@ -128,26 +252,42 @@
   box-shadow: 0 0 8px rgba(168, 121, 230, 0.4);
 }
 
-.item-accion {
-  margin-bottom: 10px;
+/* ==========================================================================
+   Objetos Mágicos (Hover Interactivo)
+   ========================================================================== */
+.objeto-link {
+  color: #ff9d76;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
 }
 
-.item-accion p {
-  margin: 0;
-  white-space: normal;
-  word-wrap: break-word;
+.objeto-link:hover {
+  color: #ffffff;
 }
 
-.nombre-accion {
-  color: #f1f1f1;
-  font-style: italic;
+.tarjeta-objeto-flotante {
+  position: fixed;
+  background-color: #1e1e28;
+  border: 1px solid #c988e9;
+  border-radius: 6px;
+  padding: 12px;
+  width: 320px;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+  z-index: 2000;
+  pointer-events: none;
+  font-size: 0.9rem;
 }
 
-/* --- Navegación de Pestañas (Esquina superior derecha) --- */
-.statblock-header {
-  position: relative; /* Permite posicionar las flechas de forma absoluta */
+.tarjeta-objeto-flotante h4 {
+  margin: 0 0 5px 0;
+  color: #c988e9;
 }
 
+/* ==========================================================================
+   Navegación de Pestañas
+   ========================================================================== */
 .nav-pestanas {
   position: absolute;
   top: 0;
@@ -185,7 +325,6 @@
   text-align: center;
 }
 
-/* --- Contenido de Pestañas --- */
 .tab-content {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -198,10 +337,12 @@
   font-size: 0.95rem;
   line-height: 1.6;
   color: #d1d1db;
-  white-space: pre-line; /* Respeta los saltos de línea del texto guardado */
+  white-space: pre-line;
 }
 
-/* --- Galería Hero Slider --- */
+/* ==========================================================================
+   Galería Hero Slider
+   ========================================================================== */
 .galeria-hero {
   position: relative;
   width: 100%;
@@ -222,6 +363,15 @@
   object-fit: contain;
 }
 
+.hero-img.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.hero-img.clickable:hover {
+  transform: scale(1.03);
+}
+
 .hero-btn {
   position: absolute;
   top: 50%;
@@ -240,13 +390,8 @@
   background-color: #8c2323;
 }
 
-.hero-btn.prev {
-  left: 10px;
-}
-
-.hero-btn.next {
-  right: 10px;
-}
+.hero-btn.prev { left: 10px; }
+.hero-btn.next { right: 10px; }
 
 .hero-indicadores {
   position: absolute;
@@ -269,17 +414,9 @@
   transform: scale(1.2);
 }
 
-/* --- Efecto click en la galería --- */
-.hero-img.clickable {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.hero-img.clickable:hover {
-  transform: scale(1.03);
-}
-
-/* --- Modal Pantalla Completa (Dialog Nativo) --- */
+/* ==========================================================================
+   Modal Pantalla Completa
+   ========================================================================== */
 .fullscreen-dialog {
   width: 100vw;
   height: 100vh;
@@ -290,28 +427,25 @@
   border: none;
   background: transparent;
   outline: none;
-  
-  /* Centra la imagen y los controles de forma perfecta */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Oscurece el resto de la pantalla (exclusivo de <dialog>) */
 .fullscreen-dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.98);
 }
 
 .fullscreen-img {
-  width: 90vw;   /* Obliga a la imagen a ocupar el 90% del ancho de la pantalla */
-  height: 90vh;  /* Obliga a la imagen a ocupar el 90% del alto de la pantalla */
-  object-fit: contain; /* Escala la imagen para llenar ese espacio sin distorsionarse */
+  width: 90vw;
+  height: 90vh;
+  object-fit: contain;
   border-radius: 6px;
   cursor: default;
 }
 
 .cerrar-btn {
-  position: fixed; /* Se mantiene anclado arriba a la derecha */
+  position: fixed;
   top: 30px;
   right: 40px;
   background: transparent;
@@ -328,7 +462,6 @@
   transform: scale(1.1);
 }
 
-/* Flechas ancladas a los costados de la pantalla completa */
 .fs-btn {
   position: fixed;
   top: 50%;
@@ -340,10 +473,11 @@
   border-radius: 8px;
 }
 
-.fs-btn.prev {
-  left: 20px;
-}
+.fs-btn.prev { left: 20px; }
+.fs-btn.next { right: 20px; }
 
-.fs-btn.next {
-  right: 20px;
+/* Animaciones Generales */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

@@ -5,6 +5,7 @@ import path from 'path'; // 👈 Importamos path para manejar rutas de archivos
 import { fileURLToPath } from 'url'; // 👈 Necesario en ESM para obtener __dirname
 import criaturasRouter from './routes/criaturas.routes.js';
 import conjurosRoutes from './routes/conjuros.routes.js';
+import objetosMagicosRoutes from './routes/objetos-magicos.routes.js';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api/criaturas', criaturasRouter);
 app.use('/api/conjuros', conjurosRoutes);
+app.use('/api/objetos-magicos', objetosMagicosRoutes); // Asegúrate de tener un router para objetos mágicos
 
 app.listen(PORT, () => {
     console.log(`⚔️  Servidor MasterHub corriendo en http://localhost:${PORT}`);

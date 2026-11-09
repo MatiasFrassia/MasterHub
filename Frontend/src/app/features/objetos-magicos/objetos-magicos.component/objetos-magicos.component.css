@@ -1,0 +1,137 @@
+.contenedor-principal {
+  padding: 2rem;
+  color: #fff;
+  font-family: sans-serif;
+  position: relative; /* Importante para la tarjeta flotante */
+}
+
+h2 {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+}
+
+.filtros-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+.filtros-container input,
+.filtros-container select {
+  background-color: #1a1a24;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.btn-buscar {
+  background-color: #b05c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-buscar:hover {
+  background-color: #d16e49;
+}
+
+.tabla-container {
+  background-color: #242430;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #444;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+tr:hover td {
+  background-color: #2f2f3d;
+}
+
+tr.seleccionado td {
+  background-color: #3b2a3a;
+  border-left: 3px solid #d16e49;
+}
+
+.col-nombre {
+  font-weight: bold;
+  color: #ff9d76;
+}
+
+/* --- TARJETA FLOTANTE --- */
+.tarjeta-flotante {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1e1e28;
+  border: 1px solid #444;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  z-index: 1000;
+  padding: 20px;
+}
+
+.tarjeta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.tarjeta-header h3 {
+  margin: 0;
+  color: #c988e9;
+}
+
+.btn-cerrar {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.btn-cerrar:hover {
+  color: #fff;
+}
+
+.tarjeta-subtitulo {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 15px;
+}
+
+.descripcion {
+  margin-top: 15px;
+  line-height: 1.5;
+  color: #ddd;
+}

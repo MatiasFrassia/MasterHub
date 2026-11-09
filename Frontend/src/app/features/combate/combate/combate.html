@@ -6,9 +6,10 @@
   <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
   
   <div class="grilla-combatientes">
-    <app-tarjeta-basica 
-      *ngFor="let c of combatientesActivos" 
-      [criatura]="c"
-    ></app-tarjeta-basica>
-  </div>
+  @for (c of combatientesActivos; track c.id) {
+    <app-tarjeta-basica [criatura]="c"></app-tarjeta-basica>
+  } @empty {
+    <p>No hay combatientes activos.</p>
+  }
+</div>
 </section>

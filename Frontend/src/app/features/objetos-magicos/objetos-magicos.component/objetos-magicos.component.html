@@ -1,0 +1,72 @@
+<div class="contenedor-principal">
+  <h2>BUSCAR OBJETOS MÁGICOS</h2>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="filtros-container">
+    <input 
+      type="text" 
+      placeholder="Buscar por nombre" 
+      [(ngModel)]="filtroNombre" 
+      (input)="aplicarFiltros()">
+
+    <select [(ngModel)]="filtroRareza" (change)="aplicarFiltros()">
+      <option value="">- Rareza -</option>
+      <option *ngFor="let r of rarezas" [value]="r">{{ r }}</option>
+    </select>
+
+    <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+      <option value="">- Tipo -</option>
+      <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+    </select>
+
+    <select [(ngModel)]="criterioOrden" (change)="ordenarLista()">
+      <option value="nombre">Ordenar por nombre</option>
+      <option value="rareza">Ordenar por rareza</option>
+      <option value="tipo">Ordenar por tipo</option>
+    </select>
+
+    <button class="btn-buscar" (click)="aplicarFiltros()">Buscar</button>
+  </div>
+
+  <!-- Tabla de Resultados -->
+  <div class="tabla-container">
+    <table>
+      <thead>
+        <tr>
+          <th>NOMBRE</th>
+          <th>TIPO</th>
+          <th>RAREZA</th>
+          <th>SINTONIZACIÓN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let obj of objetosFiltrados" 
+            (click)="seleccionarObjeto(obj)"
+            [class.seleccionado]="objetoSeleccionado?.id === obj.id">
+          <td class="col-nombre">🔑 {{ obj.nombre }}</td>
+          <td>{{ obj.tipo }}</td>
+          <td>{{ obj.rareza }}</td>
+          <td>{{ obj.sintonizacion ? obj.sintonizacion : '--' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tarjeta Desplegable de Detalles -->
+  <div class="tarjeta-flotante" *ngIf="objetoSeleccionado">
+    <div class="tarjeta-header">
+      <h3>{{ objetoSeleccionado.nombre }}</h3>
+      <button class="btn-cerrar" (click)="cerrarTarjeta()">✖</button>
+    </div>
+    <div class="tarjeta-subtitulo">
+      <em>{{ objetoSeleccionado.tipo }}, {{ objetoSeleccionado.rareza }}</em>
+    </div>
+    <div class="tarjeta-cuerpo">
+      <p *ngIf="objetoSeleccionado.sintonizacion">
+        <strong>Sintonización:</strong> {{ objetoSeleccionado.sintonizacion }}
+      </p>
+      <!-- Se usa innerHTML por si tu descripción trae saltos de línea <br> o negritas -->
+      <div class="descripcion" [innerHTML]="objetoSeleccionado.descripcion"></div>
+    </div>
+  </div>
+</div>

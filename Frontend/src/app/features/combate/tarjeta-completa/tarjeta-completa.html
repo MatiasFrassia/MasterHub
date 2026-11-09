@@ -64,18 +64,69 @@
           </div>
         </section>
 
-        <section *ngIf="criatura.conjuros && criatura.conjuros.length > 0" class="seccion-conjuros">
-          <div class="red-line"></div>
-          <h3 class="titulo-seccion-dnd">✨ CONJUROS</h3>
-          <div class="conjuros-list">
-            <span *ngFor="let c of criatura.conjuros" class="badge-conjuro" cdkOverlayOrigin #conjuroTrigger="cdkOverlayOrigin" (mouseenter)="conjuroActivo = c" (mouseleave)="conjuroActivo = null">
-              {{ c.nombre }} <small *ngIf="c.modalidad">({{ c.modalidad }})</small>
-              <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="conjuroTrigger" [cdkConnectedOverlayOpen]="conjuroActivo?.id === c.id">
-                <app-tarjeta-conjuro [conjuro]="c"></app-tarjeta-conjuro>
-              </ng-template>
-            </span>
+        <!-- ================= Conjuros ================= -->
+        @if (criatura?.conjuros && criatura?.conjuros?.length) {
+  <section class="seccion-conjuros">
+    <div class="red-line"></div>
+    
+    <div class="header-seccion-conjuros">
+      <h3 class="titulo-seccion-dnd">✨ CONJUROS</h3>
+      
+      @if (espaciosEstado && (espaciosEstado | keyvalue)?.length) {
+        <button type="button" class="btn-reiniciar-conjuros" (click)="reiniciarEspacios()" title="Reiniciar todos los espacios de conjuros">
+          🔄 Reiniciar espacios
+        </button>
+      }
+    </div>
+    
+    <div class="conjuros-container">
+      @for (grupo of conjurosOrganizados; track grupo.nivel) {
+        <div class="grupo-nivel-conjuros">
+          <div class="header-nivel">
+            <h4 class="subtitulo-nivel">
+              {{ grupo.nivel === 0 ? 'Trucos' : 'Nivel ' + grupo.nivel }}
+            </h4>
+
+            @if (espaciosEstado[grupo.nivel]) {
+              <div class="control-espacios">
+                <span class="label-espacios">Espacios:</span>
+                <button type="button" 
+                        class="btn-slot" 
+                        (click)="usarEspacio(grupo.nivel)" 
+                        [disabled]="espaciosEstado[grupo.nivel].actuales === 0">-</button>
+
+                <span class="contador-espacios" [class.agotado]="espaciosEstado[grupo.nivel].actuales === 0">
+                  {{ espaciosEstado[grupo.nivel].actuales }} / {{ espaciosEstado[grupo.nivel].max }}
+                </span>
+
+                <button type="button" 
+                        class="btn-slot" 
+                        (click)="recuperarEspacio(grupo.nivel)" 
+                        [disabled]="espaciosEstado[grupo.nivel].actuales === espaciosEstado[grupo.nivel].max">+</button>
+              </div>
+            }
           </div>
-        </section>
+          
+          <div class="conjuros-list">
+            @for (c of grupo.conjuros; track c.id) {
+              <span class="badge-conjuro" cdkOverlayOrigin #conjuroTrigger="cdkOverlayOrigin" (mouseenter)="conjuroActivo = c" (mouseleave)="conjuroActivo = null">
+                {{ c.nombre }} 
+                
+                @if (c.modalidad && formatearModalidad(c.modalidad)) {
+                  <small>({{ formatearModalidad(c.modalidad) }})</small>
+                }
+
+                <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="conjuroTrigger" [cdkConnectedOverlayOpen]="conjuroActivo?.id === c.id">
+                  <app-tarjeta-conjuro [conjuro]="c"></app-tarjeta-conjuro>
+                </ng-template>
+              </span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+}
 
         <section *ngIf="acciones.length > 0" class="seccion-bloque">
           <div class="red-line"></div>
