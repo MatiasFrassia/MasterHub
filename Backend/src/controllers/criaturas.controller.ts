@@ -6,7 +6,8 @@ export const buscarCriaturas = async (req: Request, res: Response): Promise<void
     try {
         const termino = (req.query.q as string) || '';
         const [filas] = await db.query<RowDataPacket[]>(
-            `SELECT id, nombre, desafio, clase_armadura, puntos_golpe, url_imagen 
+            `SELECT id, nombre, desafio, clase_armadura, puntos_golpe, url_imagen, 
+                    resistencias, inmunidades_dano, vulnerabilidades, destreza 
              FROM criaturas 
              WHERE nombre LIKE ? 
              LIMIT 10`,
@@ -58,10 +59,17 @@ export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise
             [id]
         );
 
+        // <-- NUEVA CONSULTA PARA LOS ESPACIOS DE CONJUROS
+        const [espacios_conjuros] = await db.query<RowDataPacket[]>(
+            'SELECT id, criatura_id, nivel, cantidad_maxima, cantidad_actual FROM espacios_conjuros WHERE criatura_id = ?',
+            [id]
+        );
+
         res.json({
             ...criatura,
             acciones,
-            conjuros
+            conjuros,
+            espacios_conjuros // <-- SE INCLUYE EN LA RESPUESTA
         });
     } catch (error) {
         console.error('Error al obtener el detalle de la criatura:', error);

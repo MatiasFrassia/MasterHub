@@ -7,7 +7,7 @@ export const getObjetosMagicos = async (req: Request, res: Response): Promise<vo
         const [filas] = await db.query<RowDataPacket[]>(
             'SELECT id, nombre, tipo, rareza, sintonizacion, descripcion FROM objetos_magicos ORDER BY nombre ASC'
         );
-        console.log('Objetos mágicos obtenidos:', filas); // Agrega este log para depuración
+         // Agrega este log para depuración
         res.json(filas);
     } catch (error) {
         console.error('Error al obtener los objetos mágicos:', error);

@@ -63,3 +63,171 @@
     transform: translateY(0);
   }
 }
+
+/* Interactividad de la vida */
+.hp-stat {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.hp-stat:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.low-hp {
+  color: #ff4a4a;
+}
+
+/* Calculadora de Daño */
+.calculadora-dano {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #1e1e24; /* Ajusta al tono de tu fondo */
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.input-dano {
+  width: 60px;
+  padding: 4px;
+  background: #2a2a35;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.select-dano {
+  flex-grow: 1;
+  padding: 4px;
+  background: #2a2a35;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 4px;
+}
+
+.botones-calc {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+}
+
+.btn-dano, .btn-cura {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  transition: opacity 0.2s;
+}
+
+.btn-dano {
+  background-color: #b71c1c; /* Rojo para daño */
+}
+
+.btn-cura {
+  background-color: #2e7d32; /* Verde para curar */
+}
+
+.btn-dano:hover, .btn-cura:hover {
+  opacity: 0.8;
+}
+
+.inputs-fila {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.checkbox-magico {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 0.85rem;
+  color: #ccc;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 2px;
+}
+
+.checkbox-magico input[type="checkbox"] {
+  accent-color: #b71c1c;
+  cursor: pointer;
+}
+
+.tarjeta-basica-wrapper {
+  position: relative;
+  margin-top: 15px; /* Espacio para que el dado respire arriba */
+}
+
+/* Estilo del dado de iniciativa */
+.badge-iniciativa {
+  position: absolute;
+  top: -16px;
+  left: 15px;
+  width: 38px;
+  height: 38px;
+  background-color: #1a1a1a;
+  border: 2px solid #b71c1c;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Forma geométrica tipo D20 / Hexágono */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.d20-text {
+  text-align: center;
+}
+
+/* Estilo base del dado de iniciativa */
+.badge-iniciativa {
+  position: absolute;
+  top: -16px;
+  left: 15px;
+  width: 38px;
+  height: 38px;
+  background-color: #1a1a1a;
+  border: 2px solid #b71c1c;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* PIFIA NATURAL (1) - ROJO */
+.badge-iniciativa.critico-1 {
+  background-color: #b71c1c;
+  border-color: #ff5252;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.8);
+}
+
+/* CRÍTICO NATURAL (20) - DORADO */
+.badge-iniciativa.critico-20 {
+  background-color: #ffb300;
+  border-color: #ffe082;
+  color: #1a1a1a;
+  box-shadow: 0 0 12px rgba(255, 179, 0, 0.9);
+}
+
+.d20-text {
+  text-align: center;
+}

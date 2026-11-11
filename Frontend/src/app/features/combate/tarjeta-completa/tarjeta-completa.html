@@ -65,14 +65,14 @@
         </section>
 
         <!-- ================= Conjuros ================= -->
-        @if (criatura?.conjuros && criatura?.conjuros?.length) {
+@if (criatura.conjuros && criatura.conjuros.length) {
   <section class="seccion-conjuros">
     <div class="red-line"></div>
     
     <div class="header-seccion-conjuros">
       <h3 class="titulo-seccion-dnd">✨ CONJUROS</h3>
       
-      @if (espaciosEstado && (espaciosEstado | keyvalue)?.length) {
+      @if (criatura.espacios_conjuros && criatura.espacios_conjuros.length > 0) {
         <button type="button" class="btn-reiniciar-conjuros" (click)="reiniciarEspacios()" title="Reiniciar todos los espacios de conjuros">
           🔄 Reiniciar espacios
         </button>
@@ -87,22 +87,24 @@
               {{ grupo.nivel === 0 ? 'Trucos' : 'Nivel ' + grupo.nivel }}
             </h4>
 
-            @if (espaciosEstado[grupo.nivel]) {
+            <!-- Si el nivel tiene espacios registrados en la base de datos -->
+            @let espacio = obtenerEspacio(grupo.nivel);
+            @if (espacio) {
               <div class="control-espacios">
                 <span class="label-espacios">Espacios:</span>
                 <button type="button" 
                         class="btn-slot" 
                         (click)="usarEspacio(grupo.nivel)" 
-                        [disabled]="espaciosEstado[grupo.nivel].actuales === 0">-</button>
+                        [disabled]="espacio.cantidad_actual === 0">-</button>
 
-                <span class="contador-espacios" [class.agotado]="espaciosEstado[grupo.nivel].actuales === 0">
-                  {{ espaciosEstado[grupo.nivel].actuales }} / {{ espaciosEstado[grupo.nivel].max }}
+                <span class="contador-espacios" [class.agotado]="espacio.cantidad_actual === 0">
+                  {{ espacio.cantidad_actual }} / {{ espacio.cantidad_maxima }}
                 </span>
 
                 <button type="button" 
                         class="btn-slot" 
                         (click)="recuperarEspacio(grupo.nivel)" 
-                        [disabled]="espaciosEstado[grupo.nivel].actuales === espaciosEstado[grupo.nivel].max">+</button>
+                        [disabled]="espacio.cantidad_actual === espacio.cantidad_maxima">+</button>
               </div>
             }
           </div>

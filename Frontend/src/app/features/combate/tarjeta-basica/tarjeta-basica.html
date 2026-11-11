@@ -1,20 +1,78 @@
 <div 
-  class="tarjeta-basica"
+  class="tarjeta-basica-wrapper"
   cdkOverlayOrigin 
   #trigger="cdkOverlayOrigin"
   (click)="toggleTarjeta($event)"
 >
-  <img [src]="criatura.url_imagen || 'assets/placeholder.webp'" [alt]="criatura.nombre" class="retrato" />
-  <div class="datos">
-    <h4 class="nombre">{{ criatura.nombre }}</h4>
-    <div class="stats">
-      <span class="stat">🛡️ CA: <strong>{{ criatura.clase_armadura }}</strong></span>
-      <span class="stat">❤️ HP: <strong>{{ criatura.puntos_golpe }}</strong></span>
+  <!-- BADGE DE INICIATIVA CON CLASES DINÁMICAS -->
+  <div 
+    class="badge-iniciativa" 
+    [class.critico-1]="instanciaSeleccionada.tiradaPura === 1"
+    [class.critico-20]="instanciaSeleccionada.tiradaPura === 20"
+    [title]="'Tirada de Dado: ' + instanciaSeleccionada.tiradaPura"
+  >
+    <span class="d20-text">{{ instanciaSeleccionada.iniciativa === 999 ? '20+' : (instanciaSeleccionada.iniciativa === -999 ? '1' : instanciaSeleccionada.iniciativa) }}</span>
+  </div>
+
+  <div class="tarjeta-basica">
+    <img [src]="criatura.url_imagen || 'assets/placeholder.webp'" [alt]="criatura.nombre" class="retrato" />
+    <div class="datos">
+      <h4 class="nombre">{{ criatura.nombre }} <span *ngIf="instancias.length > 1">({{ instancias.length }})</span></h4>
+      
+      <div class="stats">
+        <span class="stat">🛡️ CA: <strong>{{ criatura.clase_armadura }}</strong></span>
+        
+        <span class="stat hp-stat" (click)="toggleCalculadora($event)">
+          ❤️ HP: <strong>{{ instanciaSeleccionada.hpActual }} / {{ instanciaSeleccionada.hpMaximo }}</strong> 
+          <small *ngIf="instancias.length > 1">({{ instanciaSeleccionada.nombrePersonalizado }})</small>
+        </span>
+      </div>
+
+      <!-- Calculadora y overlays -->
+      @if (mostrarCalculadora) {
+        <div class="calculadora-dano" (click)="$event.stopPropagation()">
+          @if (instancias.length > 1) {
+            <select [(ngModel)]="instanciaSeleccionada" class="select-instancia">
+              @for (inst of instancias; track inst.idInstancia) {
+                <option [ngValue]="inst">
+                  {{ inst.nombrePersonalizado }} (Ini: {{ inst.iniciativa }} | HP: {{ inst.hpActual }}/{{ inst.hpMaximo }})
+                </option>
+              }
+            </select>
+          }
+          <div class="inputs-fila">
+            <input type="number" [(ngModel)]="cantidadDano" placeholder="Valor" class="input-dano">
+            <select [(ngModel)]="tipoDano" class="select-dano">
+              <option value="contundente">Contundente</option>
+              <option value="cortante">Cortante</option>
+              <option value="perforante">Perforante</option>
+              <option value="fuego">Fuego</option>
+              <option value="frío">Frío</option>
+              <option value="relámpago">Relámpago</option>
+              <option value="veneno">Veneno</option>
+              <option value="ácido">Ácido</option>
+              <option value="necrótico">Necrótico</option>
+              <option value="radiante">Radiante</option>
+              <option value="fuerza">Fuerza</option>
+              <option value="psíquico">Psíquico</option>
+              <option value="trueno">Trueno</option>
+            </select>
+          </div>
+          @if (tipoDano === 'contundente' || tipoDano === 'cortante' || tipoDano === 'perforante') {
+            <label class="checkbox-magico">
+              <input type="checkbox" [(ngModel)]="esMagico"> Arma Mágica
+            </label>
+          }
+          <div class="botones-calc">
+            <button class="btn-dano" (click)="aplicarDano($event)">Dañar</button>
+            <button class="btn-cura" (click)="curar($event)">Curar</button>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </div>
 
-<!-- Overlay emergente con la ficha completa -->
 <ng-template 
   cdkConnectedOverlay 
   [cdkConnectedOverlayOrigin]="trigger" 

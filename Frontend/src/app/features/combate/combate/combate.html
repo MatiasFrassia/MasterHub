@@ -6,10 +6,13 @@
   <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
   
   <div class="grilla-combatientes">
-  @for (c of combatientesActivos; track c.id) {
-    <app-tarjeta-basica [criatura]="c"></app-tarjeta-basica>
-  } @empty {
-    <p>No hay combatientes activos.</p>
-  }
-</div>
+    @for (grupo of combatientesActivos; track grupo.criatura.id) {
+      <app-tarjeta-basica 
+        [criatura]="grupo.criatura" 
+        [instancias]="grupo.instancias">
+      </app-tarjeta-basica>
+    } @empty {
+      <p>No hay combatientes activos.</p>
+    }
+  </div>
 </section>

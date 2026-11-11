@@ -9,6 +9,14 @@ export interface Accion {
   uso_limitado?: string;
 }
 
+export interface EspacioConjuro {
+  id: number;
+  criatura_id: number;
+  nivel: number;
+  cantidad_maxima: number;
+  cantidad_actual: number;
+}
+
 export interface CriaturaResumen {
   id: number;
   nombre: string;
@@ -16,6 +24,10 @@ export interface CriaturaResumen {
   clase_armadura: number;
   puntos_golpe: number;
   url_imagen: string;
+  resistencias?: string;
+  inmunidades_dano?: string;
+  vulnerabilidades?: string;
+  destreza: number; 
 }
 
 export interface CriaturaCompleta extends CriaturaResumen {
@@ -42,7 +54,7 @@ export interface CriaturaCompleta extends CriaturaResumen {
   puntos_experiencia: number;
   acciones?: Accion[];
   conjuros?: Conjuro[];
-  // Nuevos campos:
+  espacios_conjuros?: EspacioConjuro[];
   historia?: string;
   imagenes_galeria?: string[];
 }
