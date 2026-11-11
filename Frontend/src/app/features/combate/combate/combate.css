@@ -1,12 +1,45 @@
+/* ==========================================================================
+   SECCIÓN DE COMBATE Y MESA GENERAL
+   ========================================================================== */
 .buscador-seccion {
   margin-bottom: 2rem;
 }
 
-.mesa-combate h3 {
+.header-combate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid #2a2a35;
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.header-combate h3 {
+  margin: 0;
   color: #e2e2e8;
+}
+
+.btn-iniciativa-global {
+  background: linear-gradient(135deg, #b71c1c, #880e4f);
+  color: #ffffff;
+  border: 1px solid #ff5252;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-iniciativa-global:hover {
+  background: linear-gradient(135deg, #d32f2f, #c2185b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
+}
+
+.btn-iniciativa-global:active {
+  transform: translateY(0);
 }
 
 .grilla-combatientes {

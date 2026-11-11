@@ -3,13 +3,22 @@
     <app-buscador-criaturas (criaturaSeleccionada)="agregarACombate($event)"></app-buscador-criaturas>
   </div>
 
-  <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
+  <div class="header-combate">
+    <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
+    
+    @if (combatientesActivos.length > 0) {
+      <button type="button" class="btn-iniciativa-global" (click)="tirarIniciativaGlobal()">
+        🎲 Tirar Iniciativa General
+      </button>
+    }
+  </div>
   
   <div class="grilla-combatientes">
-    @for (grupo of combatientesActivos; track grupo.criatura.id) {
+    @for (grupo of combatientesActivos; track grupo.instancias[0]?.idInstancia || grupo.criatura.id) {
       <app-tarjeta-basica 
         [criatura]="grupo.criatura" 
-        [instancias]="grupo.instancias">
+        [instancias]="grupo.instancias"
+        (iniciativaCambiada)="ordenarPorIniciativa()">
       </app-tarjeta-basica>
     } @empty {
       <p>No hay combatientes activos.</p>

@@ -4,14 +4,26 @@
   #trigger="cdkOverlayOrigin"
   (click)="toggleTarjeta($event)"
 >
-  <!-- BADGE DE INICIATIVA CON CLASES DINÁMICAS -->
+  <!-- BADGE DE INICIATIVA BOTÓN INTERACTIVO -->
   <div 
     class="badge-iniciativa" 
     [class.critico-1]="instanciaSeleccionada.tiradaPura === 1"
     [class.critico-20]="instanciaSeleccionada.tiradaPura === 20"
-    [title]="'Tirada de Dado: ' + instanciaSeleccionada.tiradaPura"
+    [class.sin-tirar]="!instanciaSeleccionada.tiradaPura"
+    (click)="tirarIniciativa($event)"
+    [title]="instanciaSeleccionada.tiradaPura ? 'Tirada de Dado: ' + instanciaSeleccionada.tiradaPura : 'Haz clic para tirar iniciativa'"
   >
-    <span class="d20-text">{{ instanciaSeleccionada.iniciativa === 999 ? '20+' : (instanciaSeleccionada.iniciativa === -999 ? '1' : instanciaSeleccionada.iniciativa) }}</span>
+    <span class="d20-text">
+      @if (!instanciaSeleccionada.tiradaPura) {
+        🎲
+      } @else if (instanciaSeleccionada.iniciativa === 999) {
+        20+
+      } @else if (instanciaSeleccionada.iniciativa === -999) {
+        1
+      } @else {
+        {{ instanciaSeleccionada.iniciativa }}
+      }
+    </span>
   </div>
 
   <div class="tarjeta-basica">
@@ -35,7 +47,7 @@
             <select [(ngModel)]="instanciaSeleccionada" class="select-instancia">
               @for (inst of instancias; track inst.idInstancia) {
                 <option [ngValue]="inst">
-                  {{ inst.nombrePersonalizado }} (Ini: {{ inst.iniciativa }} | HP: {{ inst.hpActual }}/{{ inst.hpMaximo }})
+                  {{ inst.nombrePersonalizado }} (Ini: {{ inst.iniciativa ? inst.iniciativa : '-' }} | HP: {{ inst.hpActual }}/{{ inst.hpMaximo }})
                 </option>
               }
             </select>

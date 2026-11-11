@@ -1,9 +1,9 @@
-import { Component, Input, ElementRef, inject, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CriaturaResumen } from '../../../core/models/criatura';
-import { TarjetaCompletaComponent } from '../tarjeta-completa/tarjeta-completa';
+import { TarjetaCompletaComponent } from '../tarjeta-completa/tarjeta-completa'; // <-- IMPORTANTE
 
 export interface InstanciaCombatiente {
   idInstancia: string;
@@ -17,7 +17,12 @@ export interface InstanciaCombatiente {
 @Component({
   selector: 'app-tarjeta-basica',
   standalone: true,
-  imports: [CommonModule, FormsModule, OverlayModule, TarjetaCompletaComponent],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    OverlayModule, 
+    TarjetaCompletaComponent // <-- AGREGA ESTO AQUÍ
+  ],
   templateUrl: './tarjeta-basica.html',
   styleUrl: './tarjeta-basica.css'
 })
@@ -26,6 +31,9 @@ export class TarjetaBasicaComponent implements OnInit {
 
   @Input({ required: true }) criatura!: CriaturaResumen;
   @Input({ required: true }) instancias: InstanciaCombatiente[] = [];
+
+  // Emisor de evento al cambiar iniciativa
+  @Output() iniciativaCambiada = new EventEmitter<void>();
 
   isOpen = false;
   mostrarCalculadora = false;
@@ -41,6 +49,30 @@ export class TarjetaBasicaComponent implements OnInit {
     if (this.instancias.length > 0) {
       this.instanciaSeleccionada = this.instancias[0];
     }
+  }
+
+  tirarIniciativa(event: MouseEvent): void {
+    event.stopPropagation();
+
+    const des = (this.criatura as any).destreza ?? 10;
+    const modDes = Math.floor((des - 10) / 2);
+
+    const tiradaD20 = Math.floor(Math.random() * 20) + 1;
+    let iniciativaTotal = tiradaD20 + modDes;
+
+    if (tiradaD20 === 20) {
+      iniciativaTotal = 999;
+    } else if (tiradaD20 === 1) {
+      iniciativaTotal = -999;
+    }
+
+    for (const inst of this.instancias) {
+      inst.iniciativa = iniciativaTotal;
+      inst.tiradaPura = tiradaD20;
+    }
+
+    // Notificamos al componente padre para reordenar las tarjetas
+    this.iniciativaCambiada.emit();
   }
 
   toggleTarjeta(event: MouseEvent): void {

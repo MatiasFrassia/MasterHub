@@ -1,3 +1,11 @@
+/* ==========================================================================
+   1. CONTENEDOR Y ESTRUCTURA PRINCIPAL
+   ========================================================================== */
+.tarjeta-basica-wrapper {
+  position: relative;
+  margin-top: 15px; /* Espacio superior para el dado flotante */
+}
+
 .tarjeta-basica {
   display: flex;
   align-items: center;
@@ -8,7 +16,7 @@
   padding: 10px 14px;
   width: 220px;
   cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
 .tarjeta-basica:hover {
@@ -26,16 +34,192 @@
 .datos .nombre {
   margin: 0 0 4px 0;
   font-size: 0.95rem;
-  color: #fff;
+  color: #ffffff;
 }
 
 .stats {
   display: flex;
   gap: 10px;
   font-size: 0.8rem;
-  color: #bbb;
+  color: #bbbbbb;
 }
 
+/* Interacción del medidor de vida (HP) */
+.hp-stat {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.hp-stat:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.low-hp {
+  color: #ff4a4a;
+}
+
+/* ==========================================================================
+   2. BADGE D20 / BOTÓN DE INICIATIVA
+   ========================================================================== */
+.badge-iniciativa {
+  position: absolute;
+  top: -16px;
+  left: 15px;
+  width: 38px;
+  height: 38px;
+  background-color: #1a1a1a;
+  border: 2px solid #b71c1c;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.badge-iniciativa:hover {
+  transform: scale(1.15);
+}
+
+.badge-iniciativa:active {
+  transform: scale(0.95);
+}
+
+.d20-text {
+  text-align: center;
+}
+
+/* Estado inicial (sin tirar) */
+.badge-iniciativa.sin-tirar {
+  background-color: #2a2a2a;
+  border-color: #666666;
+  color: #cccccc;
+}
+
+/* Pifia Natural (1) */
+.badge-iniciativa.critico-1 {
+  background-color: #b71c1c;
+  border-color: #ff5252;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.8);
+}
+
+/* Crítico Natural (20) */
+.badge-iniciativa.critico-20 {
+  background-color: #ffb300;
+  border-color: #ffe082;
+  color: #1a1a1a;
+  box-shadow: 0 0 12px rgba(255, 179, 0, 0.9);
+}
+
+/* ==========================================================================
+   3. CALCULADORA DE DAÑO Y CONTROLES
+   ========================================================================== */
+.calculadora-dano {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #1e1e24;
+  border: 1px solid #333333;
+  border-radius: 6px;
+}
+
+.select-instancia {
+  width: 100%;
+  padding: 4px;
+  background: #2a2a35;
+  border: 1px solid #444444;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.inputs-fila {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.input-dano {
+  width: 60px;
+  padding: 4px;
+  background: #2a2a35;
+  border: 1px solid #444444;
+  color: #ffffff;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.select-dano {
+  flex-grow: 1;
+  padding: 4px;
+  background: #2a2a35;
+  border: 1px solid #444444;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.checkbox-magico {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 0.85rem;
+  color: #cccccc;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 2px;
+}
+
+.checkbox-magico input[type="checkbox"] {
+  accent-color: #b71c1c;
+  cursor: pointer;
+}
+
+.botones-calc {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+}
+
+.btn-dano, 
+.btn-cura {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  transition: opacity 0.2s ease;
+}
+
+.btn-dano {
+  background-color: #b71c1c;
+}
+
+.btn-cura {
+  background-color: #2e7d32;
+}
+
+.btn-dano:hover, 
+.btn-cura:hover {
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   4. ANIMACIONES Y OVERLAY (FICHA COMPLETA)
+   ========================================================================== */
 .overlay-wrapper {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
@@ -49,7 +233,7 @@
 .fade-out {
   opacity: 0;
   transform: translateY(-4px);
-  pointer-events: none; /* Impide que el cursor interactúe mientras desaparece */
+  pointer-events: none;
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
@@ -62,172 +246,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Interactividad de la vida */
-.hp-stat {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-.hp-stat:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-.low-hp {
-  color: #ff4a4a;
-}
-
-/* Calculadora de Daño */
-.calculadora-dano {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #1e1e24; /* Ajusta al tono de tu fondo */
-  border-radius: 6px;
-  border: 1px solid #333;
-}
-
-.input-dano {
-  width: 60px;
-  padding: 4px;
-  background: #2a2a35;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.select-dano {
-  flex-grow: 1;
-  padding: 4px;
-  background: #2a2a35;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 4px;
-}
-
-.botones-calc {
-  display: flex;
-  width: 100%;
-  gap: 6px;
-}
-
-.btn-dano, .btn-cura {
-  flex: 1;
-  padding: 6px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  color: white;
-  transition: opacity 0.2s;
-}
-
-.btn-dano {
-  background-color: #b71c1c; /* Rojo para daño */
-}
-
-.btn-cura {
-  background-color: #2e7d32; /* Verde para curar */
-}
-
-.btn-dano:hover, .btn-cura:hover {
-  opacity: 0.8;
-}
-
-.inputs-fila {
-  display: flex;
-  width: 100%;
-  gap: 8px;
-}
-
-.checkbox-magico {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  font-size: 0.85rem;
-  color: #ccc;
-  cursor: pointer;
-  user-select: none;
-  padding-left: 2px;
-}
-
-.checkbox-magico input[type="checkbox"] {
-  accent-color: #b71c1c;
-  cursor: pointer;
-}
-
-.tarjeta-basica-wrapper {
-  position: relative;
-  margin-top: 15px; /* Espacio para que el dado respire arriba */
-}
-
-/* Estilo del dado de iniciativa */
-.badge-iniciativa {
-  position: absolute;
-  top: -16px;
-  left: 15px;
-  width: 38px;
-  height: 38px;
-  background-color: #1a1a1a;
-  border: 2px solid #b71c1c;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Forma geométrica tipo D20 / Hexágono */
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-.d20-text {
-  text-align: center;
-}
-
-/* Estilo base del dado de iniciativa */
-.badge-iniciativa {
-  position: absolute;
-  top: -16px;
-  left: 15px;
-  width: 38px;
-  height: 38px;
-  background-color: #1a1a1a;
-  border: 2px solid #b71c1c;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
-}
-
-/* PIFIA NATURAL (1) - ROJO */
-.badge-iniciativa.critico-1 {
-  background-color: #b71c1c;
-  border-color: #ff5252;
-  color: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 82, 82, 0.8);
-}
-
-/* CRÍTICO NATURAL (20) - DORADO */
-.badge-iniciativa.critico-20 {
-  background-color: #ffb300;
-  border-color: #ffe082;
-  color: #1a1a1a;
-  box-shadow: 0 0 12px rgba(255, 179, 0, 0.9);
-}
-
-.d20-text {
-  text-align: center;
 }
