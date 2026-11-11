@@ -1,0 +1,248 @@
+<section class="seccion-aventureros">
+  <div class="header-aventureros">
+    <h2>🛡️ Registro de Aventureros ({{ aventureros.length }})</h2>
+    <button class="btn-crear" (click)="mostrarFormulario = !mostrarFormulario">
+      {{ mostrarFormulario ? 'Cancelar' : '+ Nuevo Aventurero' }}
+    </button>
+  </div>
+
+  <!-- FORMULARIO DE CREACIÓN -->
+  @if (mostrarFormulario) {
+    <form class="formulario-aventurero" (ngSubmit)="guardarAventurero()">
+      <h3>Crear Nuevo Personaje (Nivel Total: {{ calcularNivelTotal(nuevoAventurero.clases) }})</h3>
+      
+      <div class="grid-inputs">
+        <input type="text" [(ngModel)]="nuevoAventurero.nombre" name="nombre" placeholder="Nombre *" required>
+        <input type="text" [(ngModel)]="nuevoAventurero.raza" name="raza" placeholder="Raza (ej. Elfo) *" required>
+        <input type="text" [(ngModel)]="nuevoAventurero.alineamiento" name="alineamiento" placeholder="Alineamiento (ej. Legal Bueno) *" required>
+        
+        <label>CA:
+          <input type="number" [(ngModel)]="nuevoAventurero.clase_armadura" name="clase_armadura" min="1">
+        </label>
+        
+        <label>HP Máximo:
+          <input type="number" [(ngModel)]="nuevoAventurero.hp_maximo" name="hp_maximo" min="1">
+        </label>
+
+        <label class="file-label">Galería de Imágenes:
+          <input type="file" (change)="onFilesSelected($event)" accept="image/*" multiple>
+        </label>
+      </div>
+
+      <div class="seccion-clases-form">
+        <div class="header-clases-form">
+          <h4>Clases y Subclases</h4>
+          <button type="button" class="btn-agregar-clase" (click)="agregarClase(nuevoAventurero)">+ Agregar Otra Clase</button>
+        </div>
+
+        @for (item of nuevoAventurero.clases; track $index) {
+          <div class="fila-clase-form">
+            <input type="text" [(ngModel)]="item.clase" [name]="'clase_' + $index" placeholder="Clase *" required>
+            <input type="text" [(ngModel)]="item.subclase" [name]="'subclase_' + $index" placeholder="Subclase (opcional)">
+            <label>Nvl:
+              <input type="number" [(ngModel)]="item.nivel" [name]="'nivel_' + $index" min="1" max="20" required>
+            </label>
+            @if (nuevoAventurero.clases!.length > 1) {
+              <button type="button" class="btn-quitar-clase" (click)="quitarClase(nuevoAventurero, $index)">✖</button>
+            }
+          </div>
+        }
+      </div>
+
+      <textarea [(ngModel)]="nuevoAventurero.descripcion" name="descripcion" placeholder="Descripción o trasfondo..." rows="3"></textarea>
+
+      <div class="botones-form">
+        <button type="submit" class="btn-guardar">Guardar Personaje</button>
+      </div>
+    </form>
+  }
+
+  <!-- VISTA EN LISTA RESUMIDA -->
+  <div class="lista-aventureros">
+    <div class="lista-header">
+      <span>Personaje</span>
+      <span>Raza</span>
+      <span>Clase / Subclases</span>
+      <span>Nivel Total</span>
+      <span>Alineamiento</span>
+      <span>Acciones</span>
+    </div>
+
+    @for (adv of aventureros; track adv.id) {
+      <div class="fila-aventurero" (click)="abrirDetalle(adv)">
+        <div class="col-nombre">
+          <img [src]="adv.url_imagen || 'assets/placeholder.webp'" [alt]="adv.nombre" class="avatar-lista" />
+          <strong>{{ adv.nombre }}</strong>
+        </div>
+
+        <div class="col-raza">{{ adv.raza }}</div>
+
+        <div class="col-clases">
+          @for (c of adv.clases; track c.clase + c.nivel) {
+            <span class="tag-clase">
+              <strong>{{ c.clase }}</strong> ({{ c.nivel }})
+              <small *ngIf="c.subclase">- {{ c.subclase }}</small>
+            </span>
+          }
+        </div>
+
+        <div class="col-nivel">
+          <span class="badge-nivel">Nvl {{ adv.nivel }}</span>
+        </div>
+
+        <div class="col-alineamiento">
+          📜 {{ adv.alineamiento }}
+        </div>
+
+        <div class="col-acciones">
+          <button type="button" class="btn-eliminar-lista" (click)="eliminarAventurero(adv.id, $event)">✖</button>
+        </div>
+      </div>
+    } @empty {
+      <p class="sin-aventureros">No hay aventureros registrados en el grupo.</p>
+    }
+  </div>
+</section>
+
+<!-- MODAL DETALLE / EDICIÓN -->
+@if (aventureroSeleccionado) {
+  <div class="modal-backdrop" (click)="cerrarModal()">
+    <div class="modal-aventurero-completo" (click)="$event.stopPropagation()">
+      <button type="button" class="btn-cerrar-modal" (click)="cerrarModal()">✖</button>
+
+      <!-- MODO LECTURA COMPLETA -->
+      @if (!modoEdicionModal) {
+        <div class="header-modal-pj">
+          <img 
+            [src]="aventureroSeleccionado.url_imagen || 'assets/placeholder.webp'" 
+            [alt]="aventureroSeleccionado.nombre" 
+            class="retrato-modal clickable" 
+            (click)="abrirPantallaCompleta(0)"
+            title="Haz clic para ver las imágenes en pantalla completa" 
+          />
+          
+          <div class="datos-modal">
+            <h2>{{ aventureroSeleccionado.nombre }}</h2>
+            <p class="subtitulo-modal">{{ aventureroSeleccionado.raza }} — 📜 <em>{{ aventureroSeleccionado.alineamiento }}</em></p>
+            
+            <div class="badges-clases">
+              @for (c of aventureroSeleccionado.clases; track c.clase) {
+                <span class="badge-clase-full">
+                  ⚔️ {{ c.clase }} (Nvl {{ c.nivel }}) <span *ngIf="c.subclase">— <em>{{ c.subclase }}</em></span>
+                </span>
+              }
+            </div>
+          </div>
+
+          <button type="button" class="btn-editar-modal" (click)="activarModoEdicion()">✏️ Editar</button>
+        </div>
+
+        <div class="stats-modal">
+          <div class="stat-box">🛡️ CA: <strong>{{ aventureroSeleccionado.clase_armadura }}</strong></div>
+          <div class="stat-box control-hp">
+            <span>❤️ HP:</span>
+            <button type="button" (click)="modificarHP(aventureroSeleccionado, -1, $event)">-</button>
+            <strong>{{ aventureroSeleccionado.hp_actual }} / {{ aventureroSeleccionado.hp_maximo }}</strong>
+            <button type="button" (click)="modificarHP(aventureroSeleccionado, 1, $event)">+</button>
+          </div>
+          <div class="stat-box">⭐ Nivel Total: <strong>{{ aventureroSeleccionado.nivel }}</strong></div>
+        </div>
+
+        <div class="descripcion-modal">
+          <h4>Descripción & Trasfondo</h4>
+          <p>{{ aventureroSeleccionado.descripcion || 'Sin descripción adicional.' }}</p>
+        </div>
+      } 
+      
+      <!-- MODO EDICIÓN AVANZADA -->
+      @else {
+        <h3>✏️ Editar Aventurero</h3>
+        
+        <form (ngSubmit)="guardarEdicionModal()" class="form-edicion-modal">
+          <div class="grid-inputs">
+            <input type="text" [(ngModel)]="aventureroSeleccionado.nombre" name="edit_nombre" placeholder="Nombre *" required>
+            <input type="text" [(ngModel)]="aventureroSeleccionado.raza" name="edit_raza" placeholder="Raza *" required>
+            <input type="text" [(ngModel)]="aventureroSeleccionado.alineamiento" name="edit_alineamiento" placeholder="Alineamiento *" required>
+            
+            <label>CA:
+              <input type="number" [(ngModel)]="aventureroSeleccionado.clase_armadura" name="edit_ca" min="1">
+            </label>
+            <label>HP Máximo:
+              <input type="number" [(ngModel)]="aventureroSeleccionado.hp_maximo" name="edit_hp_max" min="1">
+            </label>
+            
+            <label class="file-label">Añadir nuevas imágenes:
+              <input type="file" (change)="onFilesSelected($event)" accept="image/*" multiple>
+            </label>
+          </div>
+
+          <!-- GESTIÓN Y ELIMINACIÓN DE IMÁGENES -->
+          @let fotosEdicion = obtenerGaleriaFotos(aventureroSeleccionado);
+          @if (fotosEdicion.length > 0) {
+            <div class="seccion-galeria-edicion">
+              <h4>Galería Actual (Haz clic en ✖ para eliminar):</h4>
+              <div class="grid-fotos-edicion">
+                @for (imgUrl of fotosEdicion; track imgUrl; let i = $index) {
+                  <div class="item-foto-edicion">
+                    <img [src]="imgUrl" alt="Foto aventurero" />
+                    <button type="button" class="btn-eliminar-foto" (click)="eliminarImagenGaleria(i)" title="Eliminar esta foto">✖</button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="seccion-clases-form">
+            <div class="header-clases-form">
+              <h4>Clases y Subclases</h4>
+              <button type="button" class="btn-agregar-clase" (click)="agregarClase(aventureroSeleccionado)">+ Agregar Clase</button>
+            </div>
+
+            @for (item of aventureroSeleccionado.clases; track $index) {
+              <div class="fila-clase-form">
+                <input type="text" [(ngModel)]="item.clase" [name]="'edit_clase_' + $index" required>
+                <input type="text" [(ngModel)]="item.subclase" [name]="'edit_subclase_' + $index" placeholder="Subclase">
+                <label>Nvl:
+                  <input type="number" [(ngModel)]="item.nivel" [name]="'edit_nivel_' + $index" min="1" max="20" required>
+                </label>
+                @if (aventureroSeleccionado.clases.length > 1) {
+                  <button type="button" class="btn-quitar-clase" (click)="quitarClase(aventureroSeleccionado, $index)">✖</button>
+                }
+              </div>
+            }
+          </div>
+
+          <textarea [(ngModel)]="aventureroSeleccionado.descripcion" name="edit_desc" rows="4" placeholder="Descripción..."></textarea>
+
+          <div class="botones-form">
+            <button type="button" class="btn-cancelar" (click)="modoEdicionModal = false">Cancelar</button>
+            <button type="submit" class="btn-guardar">Guardar Cambios</button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+}
+
+<!-- VISOR PANTALLA COMPLETA NATIVO -->
+@if (isFullScreenModal && aventureroSeleccionado) {
+  @let fotosFS = obtenerGaleriaFotos(aventureroSeleccionado);
+  <div class="fullscreen-backdrop" (click)="cerrarPantallaCompleta()">
+    <button type="button" class="cerrar-btn-fs" (click)="cerrarPantallaCompleta()">✖</button>
+
+    @if (fotosFS.length > 1) {
+      <button type="button" class="hero-btn prev fs-btn" (click)="anteriorFoto($event)">❮</button>
+    }
+
+    <img 
+      [src]="fotosFS[fotoActualIndex] || 'assets/placeholder.webp'" 
+      class="fullscreen-img" 
+      (click)="$event.stopPropagation()" 
+      alt="Imagen en pantalla completa" 
+    />
+
+    @if (fotosFS.length > 1) {
+      <button type="button" class="hero-btn next fs-btn" (click)="siguienteFoto($event)">❯</button>
+    }
+  </div>
+}

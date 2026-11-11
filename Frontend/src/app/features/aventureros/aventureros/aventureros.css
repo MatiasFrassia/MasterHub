@@ -1,0 +1,570 @@
+/* ==========================================================================
+   1. CONTENEDOR Y HEADER GENERAL
+   ========================================================================== */
+.seccion-aventureros {
+  padding: 1.5rem;
+  color: #e2e2e8;
+}
+
+.header-aventureros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2a2a35;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.header-aventureros h2 {
+  margin: 0;
+  color: #ffb300;
+}
+
+.btn-crear, 
+.btn-guardar, 
+.btn-editar-modal {
+  background: linear-gradient(135deg, #b71c1c, #880e4f);
+  color: #ffffff;
+  border: 1px solid #ff5252;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.btn-crear:hover, 
+.btn-guardar:hover, 
+.btn-editar-modal:hover {
+  background: linear-gradient(135deg, #d32f2f, #c2185b);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   2. FORMULARIO DE CREACIÓN & EDICIÓN
+   ========================================================================== */
+.formulario-aventurero,
+.form-edicion-modal {
+  background-color: #1a1a22;
+  border: 1px solid #333344;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.formulario-aventurero h3,
+.form-edicion-modal h3 {
+  margin: 0 0 6px 0;
+  color: #ffb300;
+  font-size: 1.1rem;
+}
+
+.grid-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.formulario-aventurero input[type="text"],
+.formulario-aventurero input[type="number"],
+.formulario-aventurero textarea,
+.form-edicion-modal input[type="text"],
+.form-edicion-modal input[type="number"],
+.form-edicion-modal textarea {
+  background: #2a2a35;
+  border: 1px solid #444444;
+  color: #ffffff;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.formulario-aventurero input:focus,
+.formulario-aventurero textarea:focus,
+.form-edicion-modal input:focus,
+.form-edicion-modal textarea:focus {
+  outline: none;
+  border-color: #ffb300;
+}
+
+.formulario-aventurero label,
+.form-edicion-modal label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.file-label input[type="file"] {
+  font-size: 0.8rem;
+  color: #aaaaaa;
+}
+
+.seccion-clases-form {
+  background: #22222d;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #333344;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header-clases-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-clases-form h4 {
+  margin: 0;
+  color: #ffb300;
+  font-size: 0.9rem;
+}
+
+.btn-agregar-clase {
+  background: #2e7d32;
+  color: #ffffff;
+  border: 1px solid #4caf50;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-agregar-clase:hover {
+  background: #388e3c;
+}
+
+.fila-clase-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.fila-clase-form input {
+  flex: 1;
+}
+
+.fila-clase-form label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.fila-clase-form label input {
+  width: 55px;
+  text-align: center;
+}
+
+.btn-quitar-clase {
+  background: transparent;
+  border: none;
+  color: #ff5252;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-quitar-clase:hover {
+  background-color: rgba(255, 82, 82, 0.15);
+}
+
+.botones-form {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.btn-cancelar {
+  background: #333344;
+  color: #cccccc;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background: #444455;
+}
+
+/* ==========================================================================
+   3. VISTA EN LISTA RESUMIDA
+   ========================================================================== */
+.lista-aventureros {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #14141a;
+  border: 1px solid #2a2a35;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lista-header {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 2.5fr 1fr 1.5fr 60px;
+  padding: 12px 16px;
+  background-color: #1f1f28;
+  font-weight: bold;
+  color: #ffb300;
+  border-bottom: 1px solid #2a2a35;
+  font-size: 0.9rem;
+}
+
+.fila-aventurero {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 2.5fr 1fr 1.5fr 60px;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #1a1a22;
+  border-bottom: 1px solid #242430;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fila-aventurero:hover {
+  background-color: #242432;
+}
+
+.col-nombre {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+}
+
+.avatar-lista {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #444444;
+}
+
+.col-clases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag-clase {
+  background: #252533;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  border: 1px solid #333344;
+}
+
+.tag-clase small {
+  color: #ffb300;
+}
+
+.badge-nivel {
+  background: #2a2a35;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #ffb300;
+}
+
+.btn-eliminar-lista {
+  background: transparent;
+  border: none;
+  color: #ff5252;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.sin-aventureros {
+  padding: 1rem;
+  color: #aaaaaa;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ==========================================================================
+   4. MODAL DE FICHA COMPLETA
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-aventurero-completo {
+  position: relative;
+  background: #1a1a22;
+  border: 1px solid #333344;
+  border-radius: 12px;
+  padding: 24px;
+  width: 650px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+
+.btn-cerrar-modal {
+  position: absolute;
+  top: 14px; 
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #888888;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-cerrar-modal:hover {
+  color: #ff5252;
+}
+
+.header-modal-pj {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.retrato-modal {
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid #ffb300;
+}
+
+.retrato-modal.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.retrato-modal.clickable:hover {
+  transform: scale(1.05);
+  border-color: #ffffff;
+}
+
+.datos-modal { 
+  flex-grow: 1; 
+}
+
+.datos-modal h2 { 
+  margin: 0; 
+  color: #ffffff; 
+}
+
+.subtitulo-modal { 
+  margin: 4px 0 10px 0; 
+  color: #aaaaaa; 
+  font-size: 0.9rem; 
+}
+
+.badges-clases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge-clase-full {
+  background: #252535;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid #3a3a4e;
+}
+
+.stats-modal {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  background: #22222d;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.stat-box {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.control-hp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.control-hp button {
+  background: #333344;
+  color: #ffffff;
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.control-hp button:hover {
+  background-color: #444455;
+}
+
+.descripcion-modal {
+  border-top: 1px solid #2a2a35;
+  padding-top: 12px;
+  line-height: 1.5;
+}
+
+.descripcion-modal h4 {
+  margin: 0 0 6px 0;
+  color: #ffb300;
+}
+
+.descripcion-modal p {
+  margin: 0;
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   5. PANEL DE GESTIÓN DE GALERÍA (MODO EDICIÓN)
+   ========================================================================== */
+.seccion-galeria-edicion {
+  background: #22222d;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #333344;
+}
+
+.seccion-galeria-edicion h4 {
+  margin: 0 0 10px 0;
+  color: #ffb300;
+  font-size: 0.85rem;
+}
+
+.grid-fotos-edicion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.item-foto-edicion {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #444455;
+}
+
+.item-foto-edicion img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-eliminar-foto {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(183, 28, 28, 0.85);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.btn-eliminar-foto:hover {
+  background: #d32f2f;
+}
+
+/* ==========================================================================
+   6. VISOR PANTALLA COMPLETA
+   ========================================================================== */
+.fullscreen-backdrop {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(6px);
+}
+
+.fullscreen-img {
+  max-width: 85vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
+}
+
+.cerrar-btn-fs {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 2005;
+}
+
+.fs-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  border: 1px solid #444455;
+  font-size: 1.8rem;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.fs-btn.prev { left: 25px; }
+.fs-btn.next { right: 25px; }
+
+.fs-btn:hover { 
+  background: rgba(255, 179, 0, 0.8); 
+  color: #000000; 
+}

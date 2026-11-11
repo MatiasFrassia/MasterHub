@@ -15,6 +15,10 @@ export const routes: Routes = [
   },
   { path: 'conjuros', component: BuscadorConjurosComponent },
   { path: 'objetos-magicos', component: ObjetosMagicosComponent },
+  { 
+    path: 'aventureros', 
+    loadComponent: () => import('./features/aventureros/aventureros/aventureros').then(m => m.AventurerosComponent) 
+  },
   {
     path: '**',
     redirectTo: 'combate'
