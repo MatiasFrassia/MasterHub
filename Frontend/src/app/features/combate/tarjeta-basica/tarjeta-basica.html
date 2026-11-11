@@ -4,7 +4,7 @@
   #trigger="cdkOverlayOrigin"
   (click)="toggleTarjeta($event)"
 >
-  <!-- BADGE DE INICIATIVA BOTÓN INTERACTIVO -->
+  <!-- BADGE DE INICIATIVA -->
   <div 
     class="badge-iniciativa" 
     [class.critico-1]="instanciaSeleccionada.tiradaPura === 1"
@@ -27,6 +27,16 @@
   </div>
 
   <div class="tarjeta-basica">
+    <!-- BOTÓN DE HUIR / RETIRAR -->
+    <button 
+      type="button" 
+      class="btn-huir" 
+      (click)="huirInstancia($event)" 
+      [title]="instancias.length > 1 ? 'Retirar ' + instanciaSeleccionada.nombrePersonalizado + ' del combate (sin XP)' : 'Retirar del combate (sin XP)'"
+    >
+      ✖
+    </button>
+
     <img [src]="criatura.url_imagen || 'assets/placeholder.webp'" [alt]="criatura.nombre" class="retrato" />
     <div class="datos">
       <h4 class="nombre">{{ criatura.nombre }} <span *ngIf="instancias.length > 1">({{ instancias.length }})</span></h4>
@@ -40,7 +50,7 @@
         </span>
       </div>
 
-      <!-- Calculadora y overlays -->
+      <!-- Calculadora de daño -->
       @if (mostrarCalculadora) {
         <div class="calculadora-dano" (click)="$event.stopPropagation()">
           @if (instancias.length > 1) {

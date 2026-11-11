@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CriaturaResumen } from '../../../core/models/criatura';
-import { TarjetaCompletaComponent } from '../tarjeta-completa/tarjeta-completa'; // <-- IMPORTANTE
+import { TarjetaCompletaComponent } from '../tarjeta-completa/tarjeta-completa';
 
 export interface InstanciaCombatiente {
   idInstancia: string;
@@ -17,12 +17,7 @@ export interface InstanciaCombatiente {
 @Component({
   selector: 'app-tarjeta-basica',
   standalone: true,
-  imports: [
-    CommonModule, 
-    FormsModule, 
-    OverlayModule, 
-    TarjetaCompletaComponent // <-- AGREGA ESTO AQUÍ
-  ],
+  imports: [CommonModule, FormsModule, OverlayModule, TarjetaCompletaComponent],
   templateUrl: './tarjeta-basica.html',
   styleUrl: './tarjeta-basica.css'
 })
@@ -32,8 +27,8 @@ export class TarjetaBasicaComponent implements OnInit {
   @Input({ required: true }) criatura!: CriaturaResumen;
   @Input({ required: true }) instancias: InstanciaCombatiente[] = [];
 
-  // Emisor de evento al cambiar iniciativa
   @Output() iniciativaCambiada = new EventEmitter<void>();
+  @Output() grupoVacio = new EventEmitter<void>(); // <-- Evento para eliminar la tarjeta si huyen todos
 
   isOpen = false;
   mostrarCalculadora = false;
@@ -48,6 +43,23 @@ export class TarjetaBasicaComponent implements OnInit {
   ngOnInit(): void {
     if (this.instancias.length > 0) {
       this.instanciaSeleccionada = this.instancias[0];
+    }
+  }
+
+  // Remueve la instancia actual del grupo (Marcado como Huido)
+  huirInstancia(event: MouseEvent): void {
+    event.stopPropagation();
+    if (!this.instanciaSeleccionada) return;
+
+    const idx = this.instancias.findIndex(i => i.idInstancia === this.instanciaSeleccionada.idInstancia);
+    if (idx !== -1) {
+      this.instancias.splice(idx, 1);
+    }
+
+    if (this.instancias.length > 0) {
+      this.instanciaSeleccionada = this.instancias[0];
+    } else {
+      this.grupoVacio.emit();
     }
   }
 
@@ -71,7 +83,6 @@ export class TarjetaBasicaComponent implements OnInit {
       inst.tiradaPura = tiradaD20;
     }
 
-    // Notificamos al componente padre para reordenar las tarjetas
     this.iniciativaCambiada.emit();
   }
 

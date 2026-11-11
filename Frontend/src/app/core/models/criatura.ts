@@ -28,6 +28,7 @@ export interface CriaturaResumen {
   inmunidades_dano?: string;
   vulnerabilidades?: string;
   destreza: number; 
+  puntos_experiencia?: number;
 }
 
 export interface CriaturaCompleta extends CriaturaResumen {

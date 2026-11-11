@@ -9,6 +9,13 @@ export interface GrupoCombatiente {
   instancias: InstanciaCombatiente[];
 }
 
+export interface ResumenBaja {
+  nombre: string;
+  cantidadDerrotados: number;
+  xpUnidad: number;
+  xpTotalGrupo: number;
+}
+
 @Component({
   selector: 'app-combate',
   standalone: true,
@@ -18,6 +25,11 @@ export interface GrupoCombatiente {
 })
 export class CombateComponent {
   combatientesActivos: GrupoCombatiente[] = [];
+
+  // Variables para el modal de fin de combate
+  mostrarModalResumen = false;
+  bajasCombate: ResumenBaja[] = [];
+  xpTotalGanada = 0;
 
   agregarACombate(criatura: CriaturaResumen): void {
     const inputCantidad = prompt(`¿Cuántos "${criatura.nombre}" deseas agregar al combate?`, '1');
@@ -46,6 +58,10 @@ export class CombateComponent {
     });
   }
 
+  eliminarGrupo(grupo: GrupoCombatiente): void {
+    this.combatientesActivos = this.combatientesActivos.filter(g => g !== grupo);
+  }
+
   tirarIniciativaGlobal(): void {
     for (const grupo of this.combatientesActivos) {
       const des = (grupo.criatura as any).destreza ?? 10;
@@ -66,7 +82,6 @@ export class CombateComponent {
       }
     }
 
-    // Ordenar automáticamente tras tirar la iniciativa global
     this.ordenarPorIniciativa();
   }
 
@@ -75,15 +90,49 @@ export class CombateComponent {
       const iniA = a.instancias[0]?.iniciativa ?? 0;
       const iniB = b.instancias[0]?.iniciativa ?? 0;
 
-      // Si tienen distinta iniciativa, va primero la mayor
       if (iniB !== iniA) {
         return iniB - iniA;
       }
 
-      // En caso de empate de iniciativa, desempatar por modificador de Destreza
       const modDesA = Math.floor((((a.criatura as any).destreza ?? 10) - 10) / 2);
       const modDesB = Math.floor((((b.criatura as any).destreza ?? 10) - 10) / 2);
       return modDesB - modDesA;
     });
+  }
+
+  // Calcula las criaturas con 0 HP y abre el popup
+  cerrarCombate(): void {
+    this.bajasCombate = [];
+    this.xpTotalGanada = 0;
+
+    for (const grupo of this.combatientesActivos) {
+      // Contamos solo las instancias con 0 de vida
+      const derrotados = grupo.instancias.filter(i => i.hpActual === 0).length;
+
+      if (derrotados > 0) {
+        const xpUnidad = grupo.criatura.puntos_experiencia ?? 0;
+        const xpGrupo = derrotados * xpUnidad;
+
+        this.bajasCombate.push({
+          nombre: grupo.criatura.nombre,
+          cantidadDerrotados: derrotados,
+          xpUnidad: xpUnidad,
+          xpTotalGrupo: xpGrupo
+        });
+
+        this.xpTotalGanada += xpGrupo;
+      }
+    }
+
+    this.mostrarModalResumen = true;
+  }
+
+  confirmarFinCombate(): void {
+    this.combatientesActivos = [];
+    this.mostrarModalResumen = false;
+  }
+
+  cancelarFinCombate(): void {
+    this.mostrarModalResumen = false;
   }
 }

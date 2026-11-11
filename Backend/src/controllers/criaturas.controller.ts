@@ -7,7 +7,7 @@ export const buscarCriaturas = async (req: Request, res: Response): Promise<void
         const termino = (req.query.q as string) || '';
         const [filas] = await db.query<RowDataPacket[]>(
             `SELECT id, nombre, desafio, clase_armadura, puntos_golpe, url_imagen, 
-                    resistencias, inmunidades_dano, vulnerabilidades, destreza 
+                    resistencias, inmunidades_dano, vulnerabilidades, destreza, puntos_experiencia 
              FROM criaturas 
              WHERE nombre LIKE ? 
              LIMIT 10`,

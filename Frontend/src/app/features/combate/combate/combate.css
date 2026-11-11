@@ -47,3 +47,135 @@
   flex-wrap: wrap;
   gap: 16px;
 }
+
+.acciones-header {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-cerrar-combate {
+  background: linear-gradient(135deg, #2e7d32, #1b5e20);
+  color: #ffffff;
+  border: 1px solid #66bb6a;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-cerrar-combate:hover {
+  background: linear-gradient(135deg, #388e3c, #2e7d32);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   MODAL DE RESUMEN DE COMBATE
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-resumen {
+  background-color: #1a1a22;
+  border: 1px solid #333344;
+  border-radius: 12px;
+  padding: 24px;
+  width: 480px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+
+.modal-resumen h2 {
+  margin-top: 0;
+  color: #ffb300;
+  border-bottom: 1px solid #333344;
+  padding-bottom: 12px;
+}
+
+.tabla-bajas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.tabla-bajas th, 
+.tabla-bajas td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2a35;
+  font-size: 0.9rem;
+}
+
+.tabla-bajas th {
+  color: #aaa;
+}
+
+.xp-destacada {
+  color: #66bb6a;
+  font-weight: bold;
+}
+
+.total-experiencia {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #242430;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+.total-experiencia strong {
+  color: #ffb300;
+  font-size: 1.25rem;
+}
+
+.sin-bajas {
+  color: #aaa;
+  font-style: italic;
+  margin: 20px 0;
+}
+
+.modal-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-cancelar {
+  background: #333;
+  color: #ccc;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-confirmar {
+  background: #b71c1c;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover { background: #444; }
+.btn-confirmar:hover { background: #d32f2f; }

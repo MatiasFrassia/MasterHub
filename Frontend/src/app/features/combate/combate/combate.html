@@ -7,9 +7,14 @@
     <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
     
     @if (combatientesActivos.length > 0) {
-      <button type="button" class="btn-iniciativa-global" (click)="tirarIniciativaGlobal()">
-        🎲 Tirar Iniciativa General
-      </button>
+      <div class="acciones-header">
+        <button type="button" class="btn-iniciativa-global" (click)="tirarIniciativaGlobal()">
+          🎲 Tirar Iniciativa General
+        </button>
+        <button type="button" class="btn-cerrar-combate" (click)="cerrarCombate()">
+          🏆 Finalizar Combate
+        </button>
+      </div>
     }
   </div>
   
@@ -18,10 +23,55 @@
       <app-tarjeta-basica 
         [criatura]="grupo.criatura" 
         [instancias]="grupo.instancias"
-        (iniciativaCambiada)="ordenarPorIniciativa()">
+        (iniciativaCambiada)="ordenarPorIniciativa()"
+        (grupoVacio)="eliminarGrupo(grupo)">
       </app-tarjeta-basica>
     } @empty {
       <p>No hay combatientes activos.</p>
     }
   </div>
 </section>
+
+<!-- MODAL DE RESUMEN DE EXPERIENCIA Y BAJAS -->
+@if (mostrarModalResumen) {
+  <div class="modal-backdrop" (click)="cancelarFinCombate()">
+    <div class="modal-resumen" (click)="$event.stopPropagation()">
+      <h2>⚔️ Resultado del Combate</h2>
+
+      @if (bajasCombate.length > 0) {
+        <table class="tabla-bajas">
+          <thead>
+            <tr>
+              <th>Criatura</th>
+              <th>Derrotados</th>
+              <th>XP c/u</th>
+              <th>Total XP</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (baja of bajasCombate; track baja.nombre) {
+              <tr>
+                <td>{{ baja.nombre }}</td>
+                <td>x{{ baja.cantidadDerrotados }}</td>
+                <td>{{ baja.xpUnidad | number }} XP</td>
+                <td class="xp-destacada">+{{ baja.xpTotalGrupo | number }} XP</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <div class="total-experiencia">
+          <span>Experiencia Total Obtenida:</span>
+          <strong>⭐ {{ xpTotalGanada | number }} XP</strong>
+        </div>
+      } @else {
+        <p class="sin-bajas">No se derrotó a ninguna criatura en este combate.</p>
+      }
+
+      <div class="modal-botones">
+        <button type="button" class="btn-cancelar" (click)="cancelarFinCombate()">Volver</button>
+        <button type="button" class="btn-confirmar" (click)="confirmarFinCombate()">Limpiar Mesa de Combate</button>
+      </div>
+    </div>
+  </div>
+}
