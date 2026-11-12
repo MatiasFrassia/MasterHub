@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorCriaturasComponent } from '../buscador-criaturas/buscador-criaturas';
+import { BuscadorAventurerosComponent } from '../buscador-aventureros/buscador-aventureros';
 import { TarjetaBasicaComponent, InstanciaCombatiente } from '../tarjeta-basica/tarjeta-basica';
+import { TarjetaBasicaAventureroComponent } from '../tarjeta-basica-aventurero/tarjeta-basica-aventurero';
 import { CriaturaResumen } from '../../../core/models/criatura';
+import { Aventurero } from '../../../core/models/aventurero';
 
 export interface GrupoCombatiente {
-  criatura: CriaturaResumen;
+  tipo: 'criatura' | 'aventurero';
+  criatura?: CriaturaResumen;
+  aventurero?: Aventurero;
   instancias: InstanciaCombatiente[];
 }
 
@@ -19,19 +24,24 @@ export interface ResumenBaja {
 @Component({
   selector: 'app-combate',
   standalone: true,
-  imports: [CommonModule, BuscadorCriaturasComponent, TarjetaBasicaComponent],
+  imports: [
+    CommonModule, 
+    BuscadorCriaturasComponent, 
+    BuscadorAventurerosComponent,
+    TarjetaBasicaComponent,
+    TarjetaBasicaAventureroComponent
+  ],
   templateUrl: './combate.html',
   styleUrl: './combate.css'
 })
 export class CombateComponent {
   combatientesActivos: GrupoCombatiente[] = [];
 
-  // Variables para el modal de fin de combate
   mostrarModalResumen = false;
   bajasCombate: ResumenBaja[] = [];
   xpTotalGanada = 0;
 
-  agregarACombate(criatura: CriaturaResumen): void {
+  agregarCriaturaACombate(criatura: CriaturaResumen): void {
     const inputCantidad = prompt(`¿Cuántos "${criatura.nombre}" deseas agregar al combate?`, '1');
     if (!inputCantidad) return;
 
@@ -43,7 +53,7 @@ export class CombateComponent {
 
     for (let i = 1; i <= cantidad; i++) {
       instancias.push({
-        idInstancia: `${criatura.id}-${Date.now()}-${i}`,
+        idInstancia: `criatura-${criatura.id}-${Date.now()}-${i}`,
         nombrePersonalizado: `${criatura.nombre} #${i}`,
         hpActual: hpMax,
         hpMaximo: hpMax,
@@ -53,8 +63,26 @@ export class CombateComponent {
     }
 
     this.combatientesActivos.push({
+      tipo: 'criatura',
       criatura,
       instancias
+    });
+  }
+
+  agregarAventureroACombate(adv: Aventurero): void {
+    const instancia: InstanciaCombatiente = {
+      idInstancia: `adv-${adv.id}-${Date.now()}`,
+      nombrePersonalizado: adv.nombre,
+      hpActual: adv.hp_actual,
+      hpMaximo: adv.hp_maximo,
+      iniciativa: 0,
+      tiradaPura: 0
+    };
+
+    this.combatientesActivos.push({
+      tipo: 'aventurero',
+      aventurero: adv,
+      instancias: [instancia]
     });
   }
 
@@ -64,21 +92,21 @@ export class CombateComponent {
 
   tirarIniciativaGlobal(): void {
     for (const grupo of this.combatientesActivos) {
-      const des = (grupo.criatura as any).destreza ?? 10;
-      const modDes = Math.floor((des - 10) / 2);
+      // Solo tiramos dados automáticos para las criaturas
+      if (grupo.tipo === 'criatura' && grupo.criatura) {
+        const des = (grupo.criatura as any).destreza ?? 10;
+        const modDes = Math.floor((des - 10) / 2);
 
-      const tiradaD20 = Math.floor(Math.random() * 20) + 1;
-      let iniciativaTotal = tiradaD20 + modDes;
+        const tiradaD20 = Math.floor(Math.random() * 20) + 1;
+        let iniciativaTotal = tiradaD20 + modDes;
 
-      if (tiradaD20 === 20) {
-        iniciativaTotal = 999;
-      } else if (tiradaD20 === 1) {
-        iniciativaTotal = -999;
-      }
+        if (tiradaD20 === 20) iniciativaTotal = 999;
+        else if (tiradaD20 === 1) iniciativaTotal = -999;
 
-      for (const inst of grupo.instancias) {
-        inst.iniciativa = iniciativaTotal;
-        inst.tiradaPura = tiradaD20;
+        for (const inst of grupo.instancias) {
+          inst.iniciativa = iniciativaTotal;
+          inst.tiradaPura = tiradaD20;
+        }
       }
     }
 
@@ -89,38 +117,31 @@ export class CombateComponent {
     this.combatientesActivos.sort((a, b) => {
       const iniA = a.instancias[0]?.iniciativa ?? 0;
       const iniB = b.instancias[0]?.iniciativa ?? 0;
-
-      if (iniB !== iniA) {
-        return iniB - iniA;
-      }
-
-      const modDesA = Math.floor((((a.criatura as any).destreza ?? 10) - 10) / 2);
-      const modDesB = Math.floor((((b.criatura as any).destreza ?? 10) - 10) / 2);
-      return modDesB - modDesA;
+      return iniB - iniA;
     });
   }
 
-  // Calcula las criaturas con 0 HP y abre el popup
   cerrarCombate(): void {
     this.bajasCombate = [];
     this.xpTotalGanada = 0;
 
     for (const grupo of this.combatientesActivos) {
-      // Contamos solo las instancias con 0 de vida
-      const derrotados = grupo.instancias.filter(i => i.hpActual === 0).length;
+      if (grupo.tipo === 'criatura' && grupo.criatura) {
+        const derrotados = grupo.instancias.filter(i => i.hpActual === 0).length;
 
-      if (derrotados > 0) {
-        const xpUnidad = grupo.criatura.puntos_experiencia ?? 0;
-        const xpGrupo = derrotados * xpUnidad;
+        if (derrotados > 0) {
+          const xpUnidad = grupo.criatura.puntos_experiencia ?? 0;
+          const xpGrupo = derrotados * xpUnidad;
 
-        this.bajasCombate.push({
-          nombre: grupo.criatura.nombre,
-          cantidadDerrotados: derrotados,
-          xpUnidad: xpUnidad,
-          xpTotalGrupo: xpGrupo
-        });
+          this.bajasCombate.push({
+            nombre: grupo.criatura.nombre,
+            cantidadDerrotados: derrotados,
+            xpUnidad,
+            xpTotalGrupo: xpGrupo
+          });
 
-        this.xpTotalGanada += xpGrupo;
+          this.xpTotalGanada += xpGrupo;
+        }
       }
     }
 

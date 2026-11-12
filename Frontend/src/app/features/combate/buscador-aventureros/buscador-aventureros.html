@@ -1,0 +1,26 @@
+<div class="buscador-container">
+  <div class="input-wrapper">
+    <span class="search-icon">🛡️</span>
+    <input 
+      type="text" 
+      [(ngModel)]="busqueda" 
+      (input)="filtrar()" 
+      placeholder="Buscar aventurero o personaje..." 
+      class="input-busqueda"
+    />
+  </div>
+
+  @if (mostrarDropdown && resultadosFiltrados.length > 0) {
+    <ul class="dropdown-resultados">
+      @for (adv of resultadosFiltrados; track adv.id) {
+        <li (click)="seleccionar(adv)" class="item-resultado">
+          <img [src]="adv.url_imagen || 'assets/placeholder.webp'" [alt]="adv.nombre" class="avatar-mini" />
+          <div class="info-mini">
+            <strong>{{ adv.nombre }}</strong>
+            <small>{{ adv.raza }} — Nvl {{ adv.nivel }}</small>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

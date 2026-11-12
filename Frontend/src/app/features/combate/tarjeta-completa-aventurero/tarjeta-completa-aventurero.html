@@ -1,0 +1,86 @@
+<div class="tarjeta-completa-container">
+  <div class="statblock">
+    <!-- Header con pestañas (igual a Criaturas) -->
+    <header class="statblock-header">
+      <h2 class="nombre">{{ aventurero.nombre }}</h2>
+      <p class="subtitulo">{{ aventurero.raza }}, {{ aventurero.alineamiento }}</p>
+
+      <div class="nav-pestanas" *ngIf="tabsDisponibles.length > 1">
+        <button type="button" class="nav-btn" (click)="anteriorTab()">❮</button>
+        <span class="nav-label">{{ nombreTabActual }}</span>
+        <button type="button" class="nav-btn" (click)="siguienteTab()">❯</button>
+      </div>
+    </header>
+
+    <div class="red-line"></div>
+
+    <div [ngSwitch]="tabActual">
+      <!-- PESTAÑA 1: STATS E INFORMACIÓN -->
+      <div *ngSwitchCase="'stats'" class="tab-content">
+        <section class="propiedades-basicas">
+          <div><strong>Clase de Armadura:</strong> {{ aventurero.clase_armadura }}</div>
+          <div><strong>Puntos de Golpe:</strong> {{ aventurero.hp_actual }} / {{ aventurero.hp_maximo }}</div>
+          <div><strong>Nivel Total:</strong> {{ aventurero.nivel }}</div>
+        </section>
+
+        <div class="red-line"></div>
+
+        <section class="seccion-bloque">
+          <h3 class="titulo-seccion-dnd">CLASES & SUBCLASES</h3>
+          @for (c of aventurero.clases; track c.clase) {
+            <div class="item-clase">
+              <p>
+                <strong class="nombre-accion">⚔️ {{ c.clase }}</strong> (Nvl {{ c.nivel }})
+                <span *ngIf="c.subclase">— <em>{{ c.subclase }}</em></span>
+              </p>
+            </div>
+          }
+        </section>
+
+        @if (aventurero.descripcion) {
+          <div class="red-line"></div>
+          <section class="seccion-bloque">
+            <h3 class="titulo-seccion-dnd">DESCRIPCIÓN Y TRASFONDO</h3>
+            <p class="historia-texto">{{ aventurero.descripcion }}</p>
+          </section>
+        }
+      </div>
+
+      <!-- PESTAÑA 2: GALERÍA HERO SLIDER -->
+      <div *ngSwitchCase="'galeria'" class="tab-content">
+        <div class="galeria-hero">
+          <button type="button" class="hero-btn prev" (click)="anteriorFoto()" *ngIf="fotosGaleria.length > 1">❮</button>
+
+          <img 
+            [src]="fotosGaleria[fotoActual]" 
+            class="hero-img clickable" 
+            [alt]="'Foto de ' + aventurero.nombre" 
+            (click)="abrirPantallaCompleta()" 
+          />
+
+          <button type="button" class="hero-btn next" (click)="siguienteFoto()" *ngIf="fotosGaleria.length > 1">❯</button>
+
+          <div class="hero-indicadores" *ngIf="fotosGaleria.length > 1">
+            <span 
+              *ngFor="let img of fotosGaleria; let i = index" 
+              class="punto" 
+              [class.activo]="i === fotoActual"
+              (click)="fotoActual = i">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NATIVO EN PANTALLA COMPLETA -->
+<dialog #fullscreenModal *ngIf="isFullScreen && fotosGaleria.length > 0" class="fullscreen-dialog" (click)="cerrarPantallaCompleta()">
+  <button type="button" class="cerrar-btn" (click)="cerrarPantallaCompleta()">✖</button>
+
+  <button type="button" class="hero-btn prev fs-btn" (click)="navFullScreen($event, 'prev')" *ngIf="fotosGaleria.length > 1">❮</button>
+
+  <img [src]="fotosGaleria[fotoActual]" class="fullscreen-img" [alt]="aventurero.nombre" (click)="$event.stopPropagation()">
+
+  <button type="button" class="hero-btn next fs-btn" (click)="navFullScreen($event, 'next')" *ngIf="fotosGaleria.length > 1">❯</button>
+</dialog>

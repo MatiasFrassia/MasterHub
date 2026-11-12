@@ -1,6 +1,8 @@
 <section class="mesa-combate">
-  <div class="buscador-seccion">
-    <app-buscador-criaturas (criaturaSeleccionada)="agregarACombate($event)"></app-buscador-criaturas>
+  <!-- DOBLE BUSCADOR: CRIATURAS Y AVENTUREROS -->
+  <div class="buscadores-grid">
+    <app-buscador-criaturas (criaturaSeleccionada)="agregarCriaturaACombate($event)"></app-buscador-criaturas>
+    <app-buscador-aventureros (aventureroSeleccionado)="agregarAventureroACombate($event)"></app-buscador-aventureros>
   </div>
 
   <div class="header-combate">
@@ -9,7 +11,7 @@
     @if (combatientesActivos.length > 0) {
       <div class="acciones-header">
         <button type="button" class="btn-iniciativa-global" (click)="tirarIniciativaGlobal()">
-          🎲 Tirar Iniciativa General
+          🎲 Tirar Iniciativa Criaturas
         </button>
         <button type="button" class="btn-cerrar-combate" (click)="cerrarCombate()">
           🏆 Finalizar Combate
@@ -19,13 +21,22 @@
   </div>
   
   <div class="grilla-combatientes">
-    @for (grupo of combatientesActivos; track grupo.instancias[0]?.idInstancia || grupo.criatura.id) {
-      <app-tarjeta-basica 
-        [criatura]="grupo.criatura" 
-        [instancias]="grupo.instancias"
-        (iniciativaCambiada)="ordenarPorIniciativa()"
-        (grupoVacio)="eliminarGrupo(grupo)">
-      </app-tarjeta-basica>
+    @for (grupo of combatientesActivos; track grupo.instancias[0]?.idInstancia) {
+      @if (grupo.tipo === 'criatura' && grupo.criatura) {
+        <app-tarjeta-basica 
+          [criatura]="grupo.criatura" 
+          [instancias]="grupo.instancias"
+          (iniciativaCambiada)="ordenarPorIniciativa()"
+          (grupoVacio)="eliminarGrupo(grupo)">
+        </app-tarjeta-basica>
+      } @else if (grupo.tipo === 'aventurero' && grupo.aventurero) {
+        <app-tarjeta-basica-aventurero
+          [aventurero]="grupo.aventurero"
+          [instancia]="grupo.instancias[0]"
+          (iniciativaCambiada)="ordenarPorIniciativa()"
+          (retirarCombatiente)="eliminarGrupo(grupo)">
+        </app-tarjeta-basica-aventurero>
+      }
     } @empty {
       <p>No hay combatientes activos.</p>
     }

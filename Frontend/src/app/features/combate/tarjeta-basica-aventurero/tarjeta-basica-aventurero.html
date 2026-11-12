@@ -1,0 +1,68 @@
+<div 
+  class="tarjeta-basica-wrapper aventurero-card"
+  cdkOverlayOrigin 
+  #trigger="cdkOverlayOrigin"
+  (click)="toggleTarjeta($event)"
+>
+  <!-- BADGE DE INICIATIVA MANUAL (CON INPUT) -->
+  <div class="badge-iniciativa-manual" (click)="$event.stopPropagation()">
+    <input 
+      type="number" 
+      [(ngModel)]="instancia.iniciativa" 
+      (change)="onIniciativaInput()" 
+      placeholder="Ini" 
+      class="input-iniciativa"
+      title="Iniciativa ingresada por el jugador"
+    />
+  </div>
+
+  <div class="tarjeta-basica">
+    <button type="button" class="btn-huir" (click)="retirar($event)" title="Retirar del combate">✖</button>
+
+    <img [src]="aventurero.url_imagen || 'assets/placeholder.webp'" [alt]="aventurero.nombre" class="retrato" />
+    
+    <div class="datos">
+      <h4 class="nombre">
+        {{ aventurero.nombre }} 
+        <span class="badge-pj">PJ</span>
+      </h4>
+      
+      <div class="stats">
+        <span class="stat">🛡️ CA: <strong>{{ aventurero.clase_armadura }}</strong></span>
+        
+        <span class="stat hp-stat" (click)="toggleCalculadora($event)" title="Modificar HP">
+          ❤️ HP: <strong>{{ instancia.hpActual }} / {{ instancia.hpMaximo }}</strong>
+        </span>
+      </div>
+
+      <!-- CALCULADORA RÁPIDA DE DAÑO / CURA -->
+      @if (mostrarCalculadora) {
+        <div class="calculadora-dano" (click)="$event.stopPropagation()">
+          <div class="inputs-fila">
+            <input type="number" [(ngModel)]="cantidadDano" placeholder="Valor" class="input-dano" autofocus>
+          </div>
+          <div class="botones-calc">
+            <button type="button" class="btn-dano" (click)="aplicarDano($event)">Dañar</button>
+            <button type="button" class="btn-cura" (click)="curar($event)">Curar</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY DE TARJETA COMPLETA (IGUAL A CRIATURAS) -->
+<ng-template 
+  cdkConnectedOverlay 
+  [cdkConnectedOverlayOrigin]="trigger" 
+  [cdkConnectedOverlayOpen]="isOpen"
+  (cdkConnectedOverlayOutsideClick)="onOutsideClick($event)"
+  [cdkConnectedOverlayPositions]="[
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 10 },
+    { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top', offsetX: -10 }
+  ]"
+>
+  <div class="overlay-wrapper fade-in">
+    <app-tarjeta-completa-aventurero [aventurero]="aventurero"></app-tarjeta-completa-aventurero>
+  </div>
+</ng-template>
