@@ -1,0 +1,51 @@
+<div 
+  class="tarjeta-objeto-wrapper"
+  cdkOverlayOrigin 
+  #trigger="cdkOverlayOrigin"
+  (click)="toggleTarjeta($event)"
+>
+  <div class="tarjeta-objeto">
+    <button type="button" class="btn-retirar" (click)="retirar($event)" title="Quitar objeto de la escena">✖</button>
+
+    <div class="icono-box">🔮</div>
+
+    <div class="datos">
+      <h4 class="nombre" [title]="objeto.nombre">{{ objeto.nombre }}</h4>
+      
+      <div class="meta-info">
+        <span class="rareza">{{ objeto.rareza }}</span>
+        <span class="separador">•</span>
+        <span class="tipo">{{ objeto.tipo }}</span>
+      </div>
+
+      @if (objeto.cargas_maximas) {
+        <div class="meta-cargas">
+          ⚡ Cargas: <strong>{{ objeto.cargas_actuales ?? objeto.cargas_maximas }} / {{ objeto.cargas_maximas }}</strong>
+        </div>
+      }
+
+      @if (objeto.vinculadoA) {
+        <div class="badge-vinculado" title="Objeto vinculado a este combatiente">
+          🔗 {{ objeto.vinculadoA }}
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY DESPLEGABLE HACIA ARRIBA Y A LA DERECHA -->
+<ng-template 
+  cdkConnectedOverlay 
+  [cdkConnectedOverlayOrigin]="trigger" 
+  [cdkConnectedOverlayOpen]="isOpen"
+  (cdkConnectedOverlayOutsideClick)="onOutsideClick($event)"
+  [cdkConnectedOverlayPositions]="[
+    { originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom', offsetX: 12 },
+    { originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom', offsetX: -12 },
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 12 }
+  ]"
+>
+  <div class="overlay-wrapper fade-in">
+    <app-tarjeta-completa-objeto [objeto]="objeto"></app-tarjeta-completa-objeto>
+  </div>
+</ng-template>

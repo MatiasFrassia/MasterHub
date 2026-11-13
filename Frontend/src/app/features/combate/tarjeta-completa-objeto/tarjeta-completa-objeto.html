@@ -1,0 +1,168 @@
+<div class="tarjeta-completa-container" (click)="$event.stopPropagation()">
+  <header class="statblock-header">
+    <h2 class="nombre">🔮 {{ objeto.nombre }}</h2>
+    <p class="subtitulo">
+      {{ objeto.tipo }}, <em>{{ objeto.rareza }}</em>
+      @if (objeto.sintonizacion) {
+        <span> ({{ objeto.sintonizacion }})</span>
+      }
+    </p>
+  </header>
+
+  <div class="red-line"></div>
+
+  <!-- CONTROL DE CARGAS (SI EL OBJETO TIENE CARGAS) -->
+  @if (objeto.cargas_maximas) {
+    <section class="seccion-cargas">
+      <div class="header-cargas">
+        <div class="titulo-cargas">
+          <h3 class="titulo-seccion-dnd">⚡ CARGAS DEL OBJETO</h3>
+          @if (objeto.recuperacion_cargas) {
+            <small class="texto-recuperacion">{{ objeto.recuperacion_cargas }}</small>
+          }
+        </div>
+        <button type="button" class="btn-reiniciar" (click)="reiniciarCargas()" title="Restaurar cargas al máximo">
+          🔄 Reiniciar
+        </button>
+      </div>
+
+      <div class="controles-cargas">
+        <button 
+          type="button" 
+          class="btn-carga" 
+          (click)="gastarCargas(1)" 
+          [disabled]="cargasActuales === 0"
+          title="Gastar 1 carga">
+          -
+        </button>
+
+        <span class="contador-cargas" [class.agotado]="cargasActuales === 0">
+          {{ cargasActuales }} / {{ objeto.cargas_maximas }}
+        </span>
+
+        <button 
+          type="button" 
+          class="btn-carga" 
+          (click)="recuperarCarga()" 
+          [disabled]="cargasActuales >= objeto.cargas_maximas"
+          title="Recuperar 1 carga">
+          +
+        </button>
+      </div>
+    </section>
+
+    <div class="red-line"></div>
+  }
+
+  <!-- HABILIDADES ACTIVAS ORDENADAS POR COSTE DE CARGAS -->
+  @if (objeto.habilidades && objeto.habilidades.length > 0) {
+    <section class="seccion-bloque">
+      <h3 class="titulo-seccion-dnd">✨ PROPIEDADES ACTIVABLES</h3>
+      
+      <div class="lista-usos">
+        @for (hab of objeto.habilidades; track hab.id) {
+          <div class="item-habilidad">
+            <div class="item-habilidad-header">
+              <div>
+                <strong class="nombre-habilidad">{{ hab.nombre }}</strong>
+                @if (hab.tipo_accion) {
+                  <span class="tag-accion">({{ hab.tipo_accion }})</span>
+                }
+              </div>
+
+              @if (objeto.cargas_maximas) {
+                <button 
+                  type="button" 
+                  class="btn-gastar-uso" 
+                  [disabled]="!puedeGastar(hab.coste_cargas)"
+                  (click)="gastarCargas(hab.coste_cargas)"
+                  [title]="puedeGastar(hab.coste_cargas) ? 'Consumir ' + hab.coste_cargas + ' carga(s)' : 'Cargas insuficientes'">
+                  ⚡ {{ hab.coste_cargas }} {{ hab.coste_cargas === 1 ? 'carga' : 'cargas' }}
+                </button>
+              }
+            </div>
+            <p class="descripcion-habilidad">{{ hab.descripcion }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="red-line"></div>
+  }
+
+  <!-- CONJUROS DEL OBJETO ORDENADOS POR COSTE DE CARGAS -->
+  @if (objeto.conjuros && objeto.conjuros.length > 0) {
+    <section class="seccion-bloque">
+      <h3 class="titulo-seccion-dnd">📜 CONJUROS DEL OBJETO</h3>
+
+      <div class="lista-conjuros-objeto">
+        @for (c of objeto.conjuros; track c.id) {
+          <div 
+            class="fila-conjuro-objeto"
+            cdkOverlayOrigin 
+            #conjuroTrigger="cdkOverlayOrigin"
+            (mouseenter)="conjuroActivo = c" 
+            (mouseleave)="conjuroActivo = null"
+          >
+            <div class="info-conjuro">
+              <span class="nombre-conjuro">{{ c.nombre }}</span>
+              @if (c.notas) {
+                <small class="notas-conjuro">{{ c.notas }}</small>
+              }
+            </div>
+
+            @if (objeto.cargas_maximas) {
+              <button 
+                type="button" 
+                class="btn-gastar-uso" 
+                [disabled]="!puedeGastar(c.coste_cargas)"
+                (click)="gastarCargas(c.coste_cargas)"
+                [title]="puedeGastar(c.coste_cargas) ? 'Lanzar gastando ' + c.coste_cargas + ' carga(s)' : 'Cargas insuficientes'">
+                ⚡ {{ c.coste_cargas }} {{ c.coste_cargas === 1 ? 'carga' : 'cargas' }}
+              </button>
+            }
+
+            <ng-template 
+              cdkConnectedOverlay 
+              [cdkConnectedOverlayOrigin]="conjuroTrigger" 
+              [cdkConnectedOverlayOpen]="conjuroActivo?.id === c.id">
+              <app-tarjeta-conjuro [conjuro]="c"></app-tarjeta-conjuro>
+            </ng-template>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="red-line"></div>
+  }
+
+  <!-- SECCIÓN DE ASIGNACIÓN / VINCULACIÓN -->
+  <section class="seccion-vinculacion">
+    <div class="header-vinculacion">
+      <h3 class="titulo-seccion-dnd">🔗 PORTADOR VINCULADO</h3>
+      @if (objeto.vinculadoA) {
+        <div class="portador-actual">
+          <span>👤 <strong>{{ objeto.vinculadoA }}</strong></span>
+          <button type="button" class="btn-desvincular" (click)="desvincular()" title="Quitar vinculación">
+            ✖ Desvincular
+          </button>
+        </div>
+      } @else {
+        <span class="sin-portador">Sin asignar (objeto libre en escena)</span>
+      }
+    </div>
+
+    <div class="buscadores-vinculacion">
+      <app-buscador-criaturas (criaturaSeleccionada)="vincularCriatura($event)"></app-buscador-criaturas>
+      <app-buscador-aventureros (aventureroSeleccionado)="vincularAventurero($event)"></app-buscador-aventureros>
+    </div>
+  </section>
+
+  <div class="red-line"></div>
+
+  <!-- DESCRIPCIÓN GENERAL Y PROPIEDADES PASIVAS -->
+  <section class="seccion-descripcion">
+    <h3 class="titulo-seccion-dnd">DESCRIPCIÓN Y PROPIEDADES PASIVAS</h3>
+    <p class="descripcion-texto">{{ objeto.descripcion || 'Sin descripción disponible.' }}</p>
+  </section>
+</div>

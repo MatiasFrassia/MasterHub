@@ -37,11 +37,10 @@ export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise
 
         const criatura = criaturas[0];
 
-        // Forzar parseo de la galería si MySQL lo devuelve como string
         if (typeof criatura.imagenes_galeria === 'string') {
             try {
                 criatura.imagenes_galeria = JSON.parse(criatura.imagenes_galeria);
-            } catch (e) {
+            } catch {
                 criatura.imagenes_galeria = [];
             }
         }
@@ -59,9 +58,17 @@ export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise
             [id]
         );
 
-        // <-- NUEVA CONSULTA PARA LOS ESPACIOS DE CONJUROS
         const [espacios_conjuros] = await db.query<RowDataPacket[]>(
             'SELECT id, criatura_id, nivel, cantidad_maxima, cantidad_actual FROM espacios_conjuros WHERE criatura_id = ?',
+            [id]
+        );
+
+        const [objetos_magicos] = await db.query<RowDataPacket[]>(
+            `SELECT om.id, om.nombre, om.tipo, om.rareza, om.sintonizacion, om.descripcion,
+                    om.cargas_maximas, om.recuperacion_cargas
+             FROM objetos_magicos om
+             JOIN criatura_objetos co ON om.id = co.objeto_id
+             WHERE co.criatura_id = ?`,
             [id]
         );
 
@@ -69,7 +76,8 @@ export const obtenerCriaturaPorId = async (req: Request, res: Response): Promise
             ...criatura,
             acciones,
             conjuros,
-            espacios_conjuros // <-- SE INCLUYE EN LA RESPUESTA
+            espacios_conjuros,
+            objetos_magicos
         });
     } catch (error) {
         console.error('Error al obtener el detalle de la criatura:', error);

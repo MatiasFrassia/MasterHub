@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorCriaturasComponent } from '../buscador-criaturas/buscador-criaturas';
 import { BuscadorAventurerosComponent } from '../buscador-aventureros/buscador-aventureros';
+import { BuscadorObjetosComponent } from '../buscador-objetos/buscador-objetos';
 import { TarjetaBasicaComponent, InstanciaCombatiente } from '../tarjeta-basica/tarjeta-basica';
 import { TarjetaBasicaAventureroComponent } from '../tarjeta-basica-aventurero/tarjeta-basica-aventurero';
+import { TarjetaBasicaObjetoComponent } from '../tarjeta-basica-objeto/tarjeta-basica-objeto';
 import { CriaturaResumen } from '../../../core/models/criatura';
 import { Aventurero } from '../../../core/models/aventurero';
+import { ObjetoMagico } from '../../../core/models/objeto-magico';
+import { CriaturaService } from '../../../core/services/criatura';
 
 export interface GrupoCombatiente {
   tipo: 'criatura' | 'aventurero';
@@ -25,17 +29,22 @@ export interface ResumenBaja {
   selector: 'app-combate',
   standalone: true,
   imports: [
-    CommonModule, 
-    BuscadorCriaturasComponent, 
+    CommonModule,
+    BuscadorCriaturasComponent,
     BuscadorAventurerosComponent,
+    BuscadorObjetosComponent,
     TarjetaBasicaComponent,
-    TarjetaBasicaAventureroComponent
+    TarjetaBasicaAventureroComponent,
+    TarjetaBasicaObjetoComponent
   ],
   templateUrl: './combate.html',
   styleUrl: './combate.css'
 })
 export class CombateComponent {
+  private criaturaService = inject(CriaturaService);
+
   combatientesActivos: GrupoCombatiente[] = [];
+  objetosActivos: ObjetoMagico[] = [];
 
   mostrarModalResumen = false;
   bajasCombate: ResumenBaja[] = [];
@@ -67,6 +76,28 @@ export class CombateComponent {
       criatura,
       instancias
     });
+
+    // Consultar si la criatura tiene objetos mágicos vinculados en BD y traerlos automáticamente
+    this.criaturaService.obtenerCriaturaPorId(criatura.id).subscribe({
+      next: (detalle: any) => {
+        if (detalle?.objetos_magicos && Array.isArray(detalle.objetos_magicos)) {
+          for (const obj of detalle.objetos_magicos) {
+            const yaExiste = this.objetosActivos.some(
+              o => o.id === obj.id && o.vinculadoA === criatura.nombre
+            );
+            if (!yaExiste) {
+              this.objetosActivos.push({
+                ...obj,
+                idInstancia: `obj-${obj.id}-${Date.now()}-${Math.random()}`,
+                vinculadoA: criatura.nombre,
+                cargas_actuales: obj.cargas_maximas ?? undefined
+              });
+            }
+          }
+        }
+      },
+      error: (err) => console.error('Error al verificar objetos vinculados de la criatura:', err)
+    });
   }
 
   agregarAventureroACombate(adv: Aventurero): void {
@@ -86,13 +117,24 @@ export class CombateComponent {
     });
   }
 
+  agregarObjetoACombate(objeto: ObjetoMagico): void {
+    this.objetosActivos.push({
+      ...objeto,
+      idInstancia: `obj-${objeto.id}-${Date.now()}-${Math.random()}`,
+      cargas_actuales: objeto.cargas_maximas ?? undefined
+    });
+  }
+
+  eliminarObjeto(objeto: ObjetoMagico): void {
+    this.objetosActivos = this.objetosActivos.filter(o => o.idInstancia !== objeto.idInstancia);
+  }
+
   eliminarGrupo(grupo: GrupoCombatiente): void {
     this.combatientesActivos = this.combatientesActivos.filter(g => g !== grupo);
   }
 
   tirarIniciativaGlobal(): void {
     for (const grupo of this.combatientesActivos) {
-      // Solo tiramos dados automáticos para las criaturas
       if (grupo.tipo === 'criatura' && grupo.criatura) {
         const des = (grupo.criatura as any).destreza ?? 10;
         const modDes = Math.floor((des - 10) / 2);
@@ -150,6 +192,7 @@ export class CombateComponent {
 
   confirmarFinCombate(): void {
     this.combatientesActivos = [];
+    this.objetosActivos = [];
     this.mostrarModalResumen = false;
   }
 

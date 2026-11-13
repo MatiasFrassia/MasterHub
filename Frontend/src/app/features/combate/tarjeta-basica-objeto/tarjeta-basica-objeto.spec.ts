@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Combate } from './combate';
+import { TarjetaBasicaObjeto } from './tarjeta-basica-objeto';
 
-describe('Combate', () => {
-  let component: Combate;
-  let fixture: ComponentFixture<Combate>;
+describe('TarjetaBasicaObjeto', () => {
+  let component: TarjetaBasicaObjeto;
+  let fixture: ComponentFixture<TarjetaBasicaObjeto>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Combate],
+      imports: [TarjetaBasicaObjeto],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Combate);
+    fixture = TestBed.createComponent(TarjetaBasicaObjeto);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,0 +1,284 @@
+.tarjeta-completa-container {
+  width: 460px;
+  max-height: 78vh;
+  overflow-y: auto;
+  background-color: #1a1a22;
+  border: 1px solid #4a355c;
+  border-radius: 8px;
+  padding: 16px;
+  color: #e2e2e8;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+}
+
+.statblock-header .nombre {
+  margin: 0;
+  color: #ce93d8;
+  font-size: 1.25rem;
+  font-family: Georgia, serif;
+}
+
+.statblock-header .subtitulo {
+  margin: 4px 0 0 0;
+  font-size: 0.85rem;
+  color: #aaaaaa;
+}
+
+.red-line {
+  height: 2px;
+  background: linear-gradient(90deg, #8e24aa, transparent);
+  margin: 12px 0;
+}
+
+.titulo-seccion-dnd {
+  margin: 0 0 6px 0;
+  color: #ffb300;
+  font-size: 0.8rem;
+  letter-spacing: 0.8px;
+}
+
+/* ==========================================
+   CONTROL DE CARGAS
+   ========================================== */
+.seccion-cargas {
+  background-color: #21212c;
+  border: 1px solid #353548;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.header-cargas {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.texto-recuperacion {
+  display: block;
+  color: #9e9eb2;
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
+.btn-reiniciar {
+  background: #2b2b3b;
+  border: 1px solid #4a4a62;
+  color: #e2e2e8;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-reiniciar:hover {
+  background: #3a3a4e;
+  border-color: #ffb300;
+}
+
+.controles-cargas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.btn-carga {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid #4fc3f7;
+  background-color: #1a2634;
+  color: #4fc3f7;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-carga:hover:not(:disabled) {
+  background-color: #4fc3f7;
+  color: #000000;
+}
+
+.btn-carga:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.contador-cargas {
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #ffffff;
+  min-width: 70px;
+  text-align: center;
+}
+
+.contador-cargas.agotado {
+  color: #ff5252;
+}
+
+/* ==========================================
+   HABILIDADES Y CONJUROS CON COSTE
+   ========================================== */
+.lista-usos, .lista-conjuros-objeto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-habilidad {
+  background-color: #22222d;
+  border-left: 3px solid #4fc3f7;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+.item-habilidad-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.nombre-habilidad {
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.tag-accion {
+  color: #aaaaaa;
+  font-size: 0.78rem;
+  margin-left: 4px;
+}
+
+.descripcion-habilidad {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: #cccccc;
+}
+
+.fila-conjuro-objeto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  background-color: #22222d;
+  border: 1px solid #323242;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: help;
+  transition: border-color 0.15s ease;
+}
+
+.fila-conjuro-objeto:hover {
+  border-color: #ce93d8;
+}
+
+.info-conjuro {
+  display: flex;
+  flex-direction: column;
+}
+
+.nombre-conjuro {
+  color: #ce93d8;
+  font-weight: bold;
+  font-size: 0.88rem;
+}
+
+.notas-conjuro {
+  color: #9e9eb2;
+  font-size: 0.75rem;
+}
+
+.btn-gastar-uso {
+  background-color: #273244;
+  border: 1px solid #4fc3f7;
+  color: #4fc3f7;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-gastar-uso:hover:not(:disabled) {
+  background-color: #4fc3f7;
+  color: #000000;
+}
+
+.btn-gastar-uso:disabled {
+  opacity: 0.35;
+  border-color: #666;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   VINCULACIÓN Y DESCRIPCIÓN
+   ========================================== */
+.seccion-vinculacion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header-vinculacion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.portador-actual {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #252533;
+  border: 1px solid #ffb300;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.btn-desvincular {
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #ff5252;
+  color: #ff5252;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-desvincular:hover {
+  background: #ff5252;
+  color: #ffffff;
+}
+
+.sin-portador {
+  font-size: 0.82rem;
+  color: #888899;
+  font-style: italic;
+}
+
+.buscadores-vinculacion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.descripcion-texto {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #d0d0dc;
+  white-space: pre-line;
+  margin: 0;
+}

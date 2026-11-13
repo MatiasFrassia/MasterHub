@@ -1,45 +1,67 @@
 <section class="mesa-combate">
-  <!-- DOBLE BUSCADOR: CRIATURAS Y AVENTUREROS -->
+  <!-- BUSCADORES SUPERIORES: CRIATURAS, AVENTUREROS Y OBJETOS MÁGICOS -->
   <div class="buscadores-grid">
     <app-buscador-criaturas (criaturaSeleccionada)="agregarCriaturaACombate($event)"></app-buscador-criaturas>
     <app-buscador-aventureros (aventureroSeleccionado)="agregarAventureroACombate($event)"></app-buscador-aventureros>
+    <app-buscador-objetos (objetoSeleccionado)="agregarObjetoACombate($event)"></app-buscador-objetos>
   </div>
 
-  <div class="header-combate">
-    <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
-    
-    @if (combatientesActivos.length > 0) {
-      <div class="acciones-header">
-        <button type="button" class="btn-iniciativa-global" (click)="tirarIniciativaGlobal()">
-          🎲 Tirar Iniciativa Criaturas
-        </button>
-        <button type="button" class="btn-cerrar-combate" (click)="cerrarCombate()">
-          🏆 Finalizar Combate
-        </button>
-      </div>
-    }
-  </div>
-  
-  <div class="grilla-combatientes">
-    @for (grupo of combatientesActivos; track grupo.instancias[0]?.idInstancia) {
-      @if (grupo.tipo === 'criatura' && grupo.criatura) {
-        <app-tarjeta-basica 
-          [criatura]="grupo.criatura" 
-          [instancias]="grupo.instancias"
-          (iniciativaCambiada)="ordenarPorIniciativa()"
-          (grupoVacio)="eliminarGrupo(grupo)">
-        </app-tarjeta-basica>
-      } @else if (grupo.tipo === 'aventurero' && grupo.aventurero) {
-        <app-tarjeta-basica-aventurero
-          [aventurero]="grupo.aventurero"
-          [instancia]="grupo.instancias[0]"
-          (iniciativaCambiada)="ordenarPorIniciativa()"
-          (retirarCombatiente)="eliminarGrupo(grupo)">
-        </app-tarjeta-basica-aventurero>
+  <!-- ZONA PRINCIPAL: COMBATIENTES ACTIVOS -->
+  <div class="zona-combatientes">
+    <div class="header-combate">
+      <h3>Combatientes Activos ({{ combatientesActivos.length }})</h3>
+      
+      @if (combatientesActivos.length > 0) {
+        <div class="acciones-header">
+          <button type="button" class="btn-iniciativa-global" (click)="tirarIniciativaGlobal()">
+            🎲 Tirar Iniciativa Criaturas
+          </button>
+          <button type="button" class="btn-cerrar-combate" (click)="cerrarCombate()">
+            🏆 Finalizar Combate
+          </button>
+        </div>
       }
-    } @empty {
-      <p>No hay combatientes activos.</p>
-    }
+    </div>
+    
+    <div class="grilla-combatientes">
+      @for (grupo of combatientesActivos; track grupo.instancias[0]?.idInstancia) {
+        @if (grupo.tipo === 'criatura' && grupo.criatura) {
+          <app-tarjeta-basica 
+            [criatura]="grupo.criatura" 
+            [instancias]="grupo.instancias"
+            (iniciativaCambiada)="ordenarPorIniciativa()"
+            (grupoVacio)="eliminarGrupo(grupo)">
+          </app-tarjeta-basica>
+        } @else if (grupo.tipo === 'aventurero' && grupo.aventurero) {
+          <app-tarjeta-basica-aventurero
+            [aventurero]="grupo.aventurero"
+            [instancia]="grupo.instancias[0]"
+            (iniciativaCambiada)="ordenarPorIniciativa()"
+            (retirarCombatiente)="eliminarGrupo(grupo)">
+          </app-tarjeta-basica-aventurero>
+        }
+      } @empty {
+        <p class="texto-vacio">No hay combatientes activos.</p>
+      }
+    </div>
+  </div>
+
+  <!-- ZONA INFERIOR SEPARADA: OBJETOS MÁGICOS INVOLUCRADOS -->
+  <div class="zona-objetos-combate">
+    <div class="header-objetos">
+      <h3>🔮 Objetos Mágicos en Escena ({{ objetosActivos.length }})</h3>
+    </div>
+
+    <div class="grilla-objetos">
+      @for (obj of objetosActivos; track obj.idInstancia || obj.id) {
+        <app-tarjeta-basica-objeto
+          [objeto]="obj"
+          (retirarObjeto)="eliminarObjeto(obj)">
+        </app-tarjeta-basica-objeto>
+      } @empty {
+        <p class="texto-vacio">No hay objetos mágicos asignados al combate.</p>
+      }
+    </div>
   </div>
 </section>
 

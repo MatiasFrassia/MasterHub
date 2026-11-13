@@ -1,0 +1,31 @@
+<div class="buscador-container">
+  <div class="input-wrapper">
+    <span class="search-icon">🔮</span>
+    <input
+      type="text"
+      [(ngModel)]="busqueda"
+      (input)="filtrar()"
+      (focus)="filtrar()"
+      (blur)="cerrarDropdown()"
+      placeholder="Buscar objeto mágico por nombre, tipo o rareza..."
+      class="input-busqueda"
+    />
+  </div>
+
+  @if (mostrarDropdown && resultadosFiltrados.length > 0) {
+    <ul class="dropdown-resultados">
+      @for (obj of resultadosFiltrados; track obj.id) {
+        <li (mousedown)="seleccionar(obj)" class="item-resultado">
+          <div class="icono-objeto">✨</div>
+          <div class="info-mini">
+            <strong>{{ obj.nombre }}</strong>
+            <small>{{ obj.tipo }} — <em>{{ obj.rareza }}</em></small>
+          </div>
+          @if (obj.sintonizacion) {
+            <span class="badge-sintonizacion" [title]="obj.sintonizacion">🔗</span>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

@@ -177,5 +177,49 @@
   cursor: pointer;
 }
 
+.mesa-combate {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px);
+  padding: 1.25rem;
+  gap: 1.25rem;
+}
+
+.buscadores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.zona-combatientes {
+  flex-grow: 1;
+}
+
+.zona-objetos-combate {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 2px solid #2a2a35;
+}
+
+.header-objetos h3 {
+  margin: 0 0 12px 0;
+  color: #ce93d8;
+  font-size: 1rem;
+}
+
+.grilla-objetos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.texto-vacio {
+  color: #777788;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .btn-cancelar:hover { background: #444; }
 .btn-confirmar:hover { background: #d32f2f; }
